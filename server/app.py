@@ -1,0 +1,1 @@
+print("twiiter app init")
