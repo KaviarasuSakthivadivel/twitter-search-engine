@@ -1,18 +1,15 @@
 <template>
     <div class="tw-main-wrapper">
         <Header></Header>
-        <AppBody></AppBody>
+        <router-view />
     </div>
 </template>
-
 <script>
-import Header from '@/views/Header.vue'
-import AppBody from '@/views/AppBody.vue'
+import Header from './Header.vue'
 export default {
     name: 'Home',
     components: {
         Header,
-        AppBody,
     },
 }
 </script>

@@ -7,7 +7,28 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import('../views/Home.vue'),
+        component: () => import('@/views/Home.vue'),
+        children: [
+            {
+                path: 'search',
+                props: true,
+                name: 'SearchHome',
+                component: () => import('@/views/SearchHomePage.vue'),
+            },
+            {
+                path: 'searchresults',
+                props: true,
+                name: 'SearchResults',
+                component: () => import('@/views/SearchResults.vue'),
+            },
+
+            {
+                path: 'analytics',
+                props: true,
+                name: 'Analytics',
+                component: () => import('@/views/Analytics.vue'),
+            },
+        ],
     },
 ]
 
