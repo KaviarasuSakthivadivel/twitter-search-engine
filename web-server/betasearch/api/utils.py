@@ -1,8 +1,6 @@
-import json
-
 import requests
 
-from server.BetaSearch.searchio.indexer.indexer import Indexer
+from indexer import Indexer
 
 
 def download_data(core, aws_url, total_docs):
@@ -37,6 +35,6 @@ if __name__ == '__main__':
     # i.delete_fields()
     # i.add_fields()
     download_data(core='IRF21P1_demo', aws_url='18.191.161.74', total_docs=179000)  # Kavi
-    download_data(core='IRF21P1', aws_url='18.217.75.107', total_docs=179000)  # Pak
-    download_data(core='IRF21P1', aws_url='18.223.120.151', total_docs=73000)  # Aashiq
-    download_data(core='IRF21P1', aws_url='3.136.97.247', total_docs=75000)  # Daya
+    # download_data(core='IRF21P1', aws_url='18.217.75.107', total_docs=179000)  # Pak
+    # download_data(core='IRF21P1', aws_url='18.223.120.151', total_docs=73000)  # Aashiq
+    # download_data(core='IRF21P1', aws_url='3.136.97.247', total_docs=75000)  # Daya

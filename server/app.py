@@ -1,1 +1,0 @@
-print("twiiter app init")
