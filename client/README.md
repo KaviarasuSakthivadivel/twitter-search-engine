@@ -1,5 +1,5 @@
-## Twitter Search Engine
+# twitter-search-engine
 
-Use npm run dev for development build
-
-Port Used: 3000
+```
+npm run serve
+```

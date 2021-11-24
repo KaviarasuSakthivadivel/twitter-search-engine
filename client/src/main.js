@@ -1,13 +1,24 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import './index.css'
-import SvgLoader from './components/SvgLoader.vue'
-import InlineSvg from 'vue-inline-svg'
+import router from './router'
+import store from './store'
+import './css/index.css'
+import './scss/common-styles.scss'
+import InlineSvg from './components/InlineSvg'
+import locale from 'element-ui/lib/locale/lang/en'
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import _ from 'lodash'
+import axios from './helpers/axios'
+Vue.config.productionTip = false
 
-const app = createApp(App)
-app.use(ElementPlus)
-app.component('SvgLoader', SvgLoader)
-app.component('InlineSvg', InlineSvg)
-app.mount('#app')
+new Vue({
+    router,
+    store,
+    render: (h) => h(App),
+}).$mount('#app')
+Vue.use(Element, { locale })
+Vue.component('InlineSvg', InlineSvg)
+
+Object.defineProperty(Vue.prototype, '$_', { value: _ })
+Object.defineProperty(Vue.prototype, '$axios', { value: axios })

@@ -1,13 +1,5 @@
 <template>
-  <MainApp />
+    <div id="app">
+        <router-view />
+    </div>
 </template>
-
-<script>
-import MainApp from './MainApp.vue'
-import './scss/common-styles.scss'
-export default {
-  components: {
-    MainApp,
-  },
-}
-</script>
