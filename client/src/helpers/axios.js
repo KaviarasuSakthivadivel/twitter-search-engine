@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const http = axios.create({
-    baseURL: '',
+    baseURL: 'http://localhost:8000',
     headers: {
         'Content-type': 'application/json',
     },
@@ -22,7 +22,7 @@ http.interceptors.response.use(
     },
     (error) => {
         // Unauthorized
-        if (error.response.status === 401) {
+        if (error === 401) {
             console.log(error)
         } else {
             throw error

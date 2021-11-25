@@ -50,11 +50,13 @@
             }
         }
     }
-
     .title-text {
         font-size: 80px;
         font-weight: bold;
         font-family: Comic Sans MS;
+        &.size-18 {
+            font-size: 18px;
+        }
     }
     .tw-body {
         background: #fff;
@@ -103,6 +105,9 @@
         color: #ffffff;
         border: 1px solid transparent;
         box-shadow: 0 2px 5px 1px rgb(64 60 67 / 16%);
+        &.mT15 {
+            margin-top: 15px;
+        }
         &.el-button {
             &:hover {
                 color: #000000;
@@ -118,6 +123,25 @@
         }
         &.mT10 {
             margin-top: 10px;
+        }
+    }
+    .tw-results {
+        height: calc(100vh - 50px);
+        .tw-results-parent {
+            height: calc(100% - 105px);
+            border-top: 1px solid #f2f4f8;
+        }
+        .results-card {
+            padding: 20px;
+            box-shadow: 0 2px 5px 1px rgb(64 60 67 / 16%);
+            border-radius: 10px;
+            cursor: pointer;
+            &:hover {
+                box-shadow: 0 2px 8px 1px rgb(64 60 67 / 24%);
+            }
+        }
+        .border-color1 {
+            border-color: #f2f4f8;
         }
     }
 }
