@@ -4,5 +4,9 @@
     </div>
 </template>
 <script>
-export default {}
+export default {
+    created() {
+        document.title = 'Twitter Search Engine'
+    },
+}
 </script>

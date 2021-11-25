@@ -35,7 +35,7 @@ def search(request):
 
         # hit Solr and get the docs with paination for each start and row combination
         response = requests.get('http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q='
-                                + q + '&start=' + str(start) + '&rows=' + str(row))
+                                + q + '&start=' + str(start) + '&rows=' + str(row) + '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm=false&hl.fl=tweet_text')
         json_response = response.json()
         #results = json_response['response']
         # print(json_response)

@@ -139,6 +139,17 @@
             &:hover {
                 box-shadow: 0 2px 8px 1px rgb(64 60 67 / 24%);
             }
+            em {
+                font-weight: bold;
+                font-style: normal;
+            }
+            a {
+                color: rgb(29, 155, 240);
+                &:hover {
+                    text-decoration: underline;
+                    text-decoration-thickness: 1px;
+                }
+            }
         }
         .border-color1 {
             border-color: #f2f4f8;
