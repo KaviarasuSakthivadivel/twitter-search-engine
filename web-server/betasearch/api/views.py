@@ -91,17 +91,17 @@ def search(request):
             hashtags.replace("#","")
             fQuery = fQuery + " AND "+"hashtags:"+"("+hashtags+")"
 
-        # appending fq
+        # hit Solr and get the docs with paination for each start and row combination
         if fQuery is not None:
+            # appending fq
             fq = urllib.parse.quote(fQuery, encoding="UTF-8")
             finalQuery = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
                         q + '&fq=' + fq + '&start=' + str(start) + '&rows=' + str(row) + \
                         '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm=false&hl.fl=tweet_text'
-                        
-        # hit Solr and get the docs with paination for each start and row combination
-        finalQuery = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-                    q + '&start=' + str(start) + '&rows=' + str(row) + \
-                    '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm=false&hl.fl=tweet_text'
+        else:          
+            finalQuery = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
+                        q + '&start=' + str(start) + '&rows=' + str(row) + \
+                        '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm=false&hl.fl=tweet_text'
 
         response = requests.get(finalQuery)
         json_response = response.json()
