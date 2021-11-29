@@ -6,9 +6,7 @@
 <script>
 export default {
     created() {
-        if (this.$route.path == '/') {
-            this.$router.push({ path: 'search' })
-        }
+        document.title = 'Twitter Search Engine'
     },
 }
 </script>

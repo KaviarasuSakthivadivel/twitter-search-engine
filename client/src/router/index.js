@@ -19,7 +19,8 @@ const routes = [
                 path: 'searchresults',
                 props: true,
                 name: 'SearchResults',
-                component: () => import('@/views/SearchResults.vue'),
+                component: () =>
+                    import('@/views/searchresults/SearchResults.vue'),
             },
 
             {

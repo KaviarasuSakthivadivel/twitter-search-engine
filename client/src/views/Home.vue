@@ -11,5 +11,13 @@ export default {
     components: {
         Header,
     },
+    title() {
+        return 'Twitter Search Engine'
+    },
+    mounted() {
+        if (this.$route.name == 'Home') {
+            this.$router.push({ path: 'search' })
+        }
+    },
 }
 </script>
