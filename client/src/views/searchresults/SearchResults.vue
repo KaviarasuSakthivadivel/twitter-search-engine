@@ -16,7 +16,7 @@
                 >Search</el-button
             >
         </div>
-        <div class="flex flex-row justify-between mt-10 tw-results-parent">
+        <div class="flex flex-row justify-between mt-5 tw-results-parent">
             <Filters class="h-full border-r border-color1 w-1/4"></Filters>
             <TweetCardsList
                 class="h-full border-r border-color1 w-2/4"
