@@ -6,7 +6,7 @@
                 <div>POI Name</div>
                 <el-select
                     class="mt-5"
-                    v-model="selectedPois"
+                    v-model="poiName"
                     clearable
                     multiple
                     collapse-tags
@@ -22,7 +22,7 @@
                 <div class="mt-5">Languages</div>
                 <el-select
                     class="mt-5"
-                    v-model="selectedLang"
+                    v-model="tweetLang"
                     clearable
                     multiple
                     collapse-tags
@@ -93,7 +93,9 @@
                 <el-switch class="mt-5" v-model="showOnlyLinkTweets">
                 </el-switch>
                 <div class="mt-5">
-                    <el-button type="primary" round>Apply</el-button>
+                    <el-button @click="applyFilters" type="primary" round
+                        >Apply</el-button
+                    >
                     <el-button round>Clear</el-button>
                 </div>
             </div>
@@ -102,10 +104,11 @@
 </template>
 <script>
 const poiList = ['CDCGov', 'narendramodi']
+import { filterFields } from '@/helpers/constants'
 export default {
     data: () => ({
-        selectedPois: [],
-        selectedLang: [],
+        poiName: [],
+        tweetLang: [],
         selectedSentiment: [],
         selectedCountry: [],
         showOnlyPoiTweets: false,
@@ -124,5 +127,45 @@ export default {
         countries: ['USA', 'India', 'Mexico'],
         sentiments: ['Positive', 'Negative', 'Neutral'],
     }),
+    created() {
+        filterFields.forEach((field) => {
+            if (!this.$_.isEmpty(this.$route.query[field])) {
+                if (this.$_.isArray(this[field])) {
+                    this.$set(
+                        this,
+                        `${field}`,
+                        JSON.parse(decodeURIComponent(this.$route.query[field]))
+                    )
+                } else {
+                    this.$set(
+                        this,
+                        field,
+                        decodeURIComponent(this.$route.query[field])
+                    )
+                }
+            }
+        })
+    },
+    methods: {
+        applyFilters() {
+            let query = { ...this.$route.query }
+            filterFields.forEach((field) => {
+                if (!this.$_.isEmpty(this[field])) {
+                    if (this.$_.isArray(this[field])) {
+                        this.$set(
+                            query,
+                            field,
+                            encodeURIComponent(JSON.stringify(this[field]))
+                        )
+                    } else {
+                        this.$set(query, field, encodeURIComponent(this[field]))
+                    }
+                }
+            })
+            this.$router.replace({
+                query: query,
+            })
+        },
+    },
 }
 </script>

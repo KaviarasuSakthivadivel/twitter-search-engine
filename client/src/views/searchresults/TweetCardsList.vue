@@ -31,6 +31,7 @@
 </template>
 <script>
 import { bus } from '../../components/bus'
+import { filterFields, arrayFields } from '@/helpers/constants'
 export default {
     data: () => ({
         tweetsList: [],
@@ -42,23 +43,20 @@ export default {
         this.fetchResults()
     },
     computed: {
-        searchQuery() {
-            return this.$route.query.searchquery
+        routeQueries() {
+            return this.$route.query || {}
         },
     },
     watch: {
-        searchQuery() {
+        routeQueries() {
             this.fetchResults()
         },
     },
     methods: {
         async fetchResults() {
+            let { queryParams } = this.constructQueries()
             this.loading = true
-            let response = await this.$axios.get(
-                `api/search?query=${this.searchQuery}&pageNo=${
-                    this.pageNo
-                }&pageSize=${20}`
-            )
+            let response = await this.$axios.post(`api/search`, queryParams)
             console.log(response)
             this.tweetsList = response?.data?.response?.docs || []
             let allHighlights = response?.data?.highlighting
@@ -108,6 +106,32 @@ export default {
         },
         nextPage() {
             this.fetchResults()
+        },
+        constructQueries() {
+            let params = {}
+            params.query = this.routeQueries.searchquery
+            params.pageNo = this.pageNo
+            params.pageSize = 20
+            filterFields.forEach((field) => {
+                if (!this.$_.isEmpty(this.routeQueries[field])) {
+                    if (arrayFields.includes(field)) {
+                        this.$set(
+                            params,
+                            `${field}`,
+                            JSON.parse(
+                                decodeURIComponent(this.$route.query[field])
+                            )
+                        )
+                    } else {
+                        this.$set(
+                            params,
+                            field,
+                            decodeURIComponent(this.$route.query[field])
+                        )
+                    }
+                }
+            })
+            return { queryParams: params }
         },
     },
 }
