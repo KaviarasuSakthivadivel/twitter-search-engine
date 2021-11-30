@@ -136,6 +136,6 @@ def search(request):
                                 "country": {"type": "terms", "field": "country", "limit": 10}}}
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()
-        json_response['time_taken'] = str(round((time.time() - start_time), 2))+' ms'
+        json_response['time_taken'] = str(round((time.time() - start_time), 2))+' s'
         print(json_response)
         return JsonResponse(json_response)
