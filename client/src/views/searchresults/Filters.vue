@@ -82,15 +82,7 @@
                 >
                 </el-date-picker>
                 <div class="mt-5">Minimum replies</div>
-                <el-date-picker
-                    class="mt-5"
-                    v-model="dateRange"
-                    type="daterange"
-                    range-separator="-"
-                    start-placeholder="Start date"
-                    end-placeholder="End date"
-                >
-                </el-date-picker>
+                <el-input type="number" v-model="minimumReplies"></el-input>
                 <div class="mt-5">Show only POI Tweets</div>
                 <el-switch class="mt-5" v-model="showOnlyPoiTweets">
                 </el-switch>
@@ -122,6 +114,7 @@ export default {
         dateRange: null,
         hashtags: '',
         mentions: '',
+        minimumReplies: null,
         poiList,
         languages: [
             { displayName: 'English', value: 'eng' },

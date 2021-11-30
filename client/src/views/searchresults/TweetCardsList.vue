@@ -30,6 +30,7 @@
     </div>
 </template>
 <script>
+import { bus } from '../../components/bus'
 export default {
     data: () => ({
         tweetsList: [],
@@ -98,6 +99,11 @@ export default {
                 this.$set(tweet, 'highlightedText', highlightedText)
             })
             this.totalDocs = response?.data?.response?.numFound || 0
+            this.$emit('setParams', {
+                count: this.totalDocs,
+                timeTaken: response?.data?.time_taken,
+            })
+            bus.$emit('chartData', response?.data?.facets)
             this.loading = false
         },
         nextPage() {

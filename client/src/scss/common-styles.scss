@@ -127,8 +127,11 @@
     }
     .tw-results {
         height: calc(100vh - 50px);
+        .fetched-tweet-text {
+            color: #ddd;
+        }
         .tw-results-parent {
-            height: calc(100% - 85px);
+            height: calc(100% - 115px);
             border-top: 1px solid #f2f4f8;
         }
         .results-card {

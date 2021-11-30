@@ -10,6 +10,8 @@ import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import _ from 'lodash'
 import axios from './helpers/axios'
+import Charts from './components/Charts'
+
 Vue.config.productionTip = false
 
 new Vue({
@@ -22,3 +24,5 @@ Vue.component('InlineSvg', InlineSvg)
 
 Object.defineProperty(Vue.prototype, '$_', { value: _ })
 Object.defineProperty(Vue.prototype, '$axios', { value: axios })
+
+Vue.component('TwCharts', Charts)
