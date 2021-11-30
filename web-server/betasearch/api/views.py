@@ -119,22 +119,19 @@ def search(request):
             hashtags.replace("#", "")
             f_query = f_query + " AND " + "hashtags:" + "(" + hashtags + ")"
 
-        # hit Solr and get the docs with paination for each start and row combination
+        # hit Solr and get the docs with pagination for each start and row combination
+        final_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
+                      q + '&start=' + str(start) + '&rows=' + str(row) + \
+                      '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm' \
+                      '=false&hl.fl=tweet_text '
         if f_query is not None:
-            # appending fq
-            fq = urllib.parse.quote(f_query, encoding="UTF-8")
-            final_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-                          q + '&fq=' + fq + '&start=' + str(start) + '&rows=' + str(row) + \
-                          '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm' \
-                          '=false&hl.fl=tweet_text '
-        else:
-            final_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-                          q + '&start=' + str(start) + '&rows=' + str(row) + \
-                          '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm' \
-                          '=false&hl.fl=tweet_text '
+            final_query += '&fq=' + urllib.parse.quote(f_query, encoding="UTF-8")
 
-        response = requests.get(final_query)
+        # Facet query formulations
+        facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
+                                "poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
+                                "country": {"type": "terms", "field": "country", "limit": 10}}}
+        response = requests.get(final_query, json=facet_json)
         json_response = response.json()
-        # results = json_response['response']
-        # print(json_response)
+        print(json_response)
         return JsonResponse(json_response)
