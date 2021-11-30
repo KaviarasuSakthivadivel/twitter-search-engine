@@ -13,11 +13,11 @@ translator = Translator()
 
 @api_view(['GET', 'POST'])
 def search(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         start_time = time.time()
-        query = request.GET['query']
-        pageNo = int(request.GET['pageNo'])
-        pageSize = int(request.GET['pageSize'])
+        query = request.data['query']
+        pageNo = int(request.data['pageNo'])
+        pageSize = int(request.data['pageSize'])
         poiName = None
         tweetLang = None
         country = None
@@ -28,35 +28,35 @@ def search(request):
         showTweetsWithLinks = False
         replyCount = 0
         hashtags = None
-        if request.GET.get('poiName', None) is not None:
-            poiName = str(request.GET['poiName'])
+        if request.data.get('poiName', None) is not None:
+            poiName = str(request.data['poiName'])
 
-        if request.GET.get('tweetLang', None) is not None:
-            tweetLang = str(request.GET['tweetLang'])
+        if request.data.get('tweetLang', None) is not None:
+            tweetLang = str(request.data['tweetLang'])
 
-        if request.GET.get('country', None) is not None:
-            country = str(request.GET['country'])
+        if request.data.get('country', None) is not None:
+            country = str(request.data['country'])
 
-        if request.GET.get('timestamp', None) is not None:
-            timestamp = float(request.GET['timestamp'])
+        if request.data.get('timestamp', None) is not None:
+            timestamp = float(request.data['timestamp'])
 
-        if request.GET.get('mentions', None) is not None:
-            mentions = str(request.GET['mentions'])
+        if request.data.get('mentions', None) is not None:
+            mentions = str(request.data['mentions'])
 
-        if request.GET.get('showOnlyReplies', False) is not False:
-            show_only_replies = bool(request.GET['showOnlyReplies'])
+        if request.data.get('showOnlyReplies', False) is not False:
+            show_only_replies = bool(request.data['showOnlyReplies'])
 
-        if request.GET.get('showOnlyPoi', False) is not False:
-            show_only_poi = bool(request.GET['showOnlyPoi'])
+        if request.data.get('showOnlyPoi', False) is not False:
+            show_only_poi = bool(request.data['showOnlyPoi'])
 
-        if request.GET.get('showTweetsWithLinks', False) is not False:
-            showTweetsWithLinks = bool(request.GET['showTweetsWithLinks'])
+        if request.data.get('showTweetsWithLinks', False) is not False:
+            showTweetsWithLinks = bool(request.data['showTweetsWithLinks'])
 
-        if request.GET.get('replyCount', 0) != 0:
-            replyCount = int(request.GET['replyCount'])
+        if request.data.get('replyCount', 0) != 0:
+            replyCount = int(request.data['replyCount'])
 
-        if request.GET.get('hashtags', None) is not None:
-            hashtags = str(request.GET['hashtags'])
+        if request.data.get('hashtags', None) is not None:
+            hashtags = str(request.data['hashtags'])
         f_query = None
         if query is None:
             query = '*'
