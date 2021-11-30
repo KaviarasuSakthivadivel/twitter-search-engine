@@ -54,13 +54,13 @@
     <div v-else class="overflow-y-scroll p-5">
         <TwCharts
             :chartName="'langChart'"
-            :chartData="langChartData"
+            :chartData="poiChartData"
             :height="300"
             :widht="300"
         ></TwCharts>
         <TwCharts
             :chartName="'poiChart'"
-            :chartData="poiChartData"
+            :chartData="langChartData"
             :height="300"
             :widht="300"
             class="mt-5"
@@ -68,40 +68,80 @@
     </div>
 </template>
 <script>
-const chartData = {
-    type: 'pie',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-            {
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ],
-                borderWidth: 1,
-            },
-        ],
+const poiChartDataOptions = {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
     },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
+    title: {
+        text: 'POI wise stats'
     },
-}
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'POI',
+        colorByPoint: true,
+        data: []
+    }]
+};
+const countryChartDataOptions = {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Country wise stats'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'Country',
+        colorByPoint: true,
+        data: []
+    }]
+};
 import { bus } from '@/components/bus'
 export default {
     data: () => ({
-        loading: false,
-        langChartData: chartData,
-        poiChartData: {},
+        loading: true,
+        poiChartData: poiChartDataOptions,
+		langChartData: countryChartDataOptions,
     }),
     created() {
         bus.$on('chartData', (data) => {
@@ -110,7 +150,20 @@ export default {
     },
     methods: {
         formatChartData(data) {
-            console.log('chart data', data)
+            const poiBucketJSON = data.poi_name.buckets;
+			let poiChartDataArr = [];
+			poiBucketJSON.forEach((bucket) => {
+				poiChartDataArr.push({"name": bucket.val, "y": bucket.count});
+			});
+			this.poiChartData.series[0].data = poiChartDataArr
+
+			const tweetLangJSON = data.tweet_lang.buckets;
+			let tweetLangDataArr = [];
+			tweetLangJSON.forEach((bucket) => {
+				tweetLangDataArr.push({"name": bucket.val, "y": bucket.count});
+			});
+			this.langChartData.series[0].data = tweetLangDataArr
+			this.loading=false;
         },
     },
 }

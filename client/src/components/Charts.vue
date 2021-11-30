@@ -1,12 +1,8 @@
 <template>
-    <canvas
-        :id="chartName"
-        :height="height || '400'"
-        :width="width || '400'"
-    ></canvas>
+    <div :id="chartName" style="width:100%; height:200px;"></div>
 </template>
 <script>
-import Chart from 'chart.js/auto'
+import Highcharts from 'highcharts'
 export default {
     props: {
         chartName: { required: true },
@@ -18,8 +14,7 @@ export default {
         chartDataClone: {},
     }),
     mounted() {
-        const ctx = document.getElementById(this.chartName)
-        new Chart(ctx, this.$_.clone(this.chartData))
+        Highcharts.chart(this.chartName, this.chartData);
     },
 }
 </script>

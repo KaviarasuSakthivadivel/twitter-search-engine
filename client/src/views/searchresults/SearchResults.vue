@@ -52,7 +52,7 @@ export default {
         routeToSearchResults() {
             if (
                 !this.$_.isEmpty(this.searchQuery) &&
-                this.searchQuery != this.$route.query.searchquery
+                this.searchQuery !== this.$route.query.searchquery
             ) {
                 this.$router.push({
                     path: 'searchresults',
