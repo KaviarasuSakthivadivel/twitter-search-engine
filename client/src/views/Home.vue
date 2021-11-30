@@ -15,7 +15,7 @@ export default {
         return 'Twitter Search Engine'
     },
     mounted() {
-        if (this.$route.name == 'Home') {
+        if (this.$route.name === 'Home') {
             this.$router.push({ path: 'search' })
         }
     },

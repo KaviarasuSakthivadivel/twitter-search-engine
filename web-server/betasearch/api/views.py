@@ -1,10 +1,12 @@
+import datetime
+import time
+
 import requests
 from django.conf import settings
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import urllib.request
 from googletrans import Translator
-import datetime
 
 translator = Translator()
 
@@ -12,6 +14,7 @@ translator = Translator()
 @api_view(['GET', 'POST'])
 def search(request):
     if request.method == 'GET':
+        start_time = time.time()
         query = request.GET['query']
         pageNo = int(request.GET['pageNo'])
         pageSize = int(request.GET['pageSize'])
@@ -49,7 +52,7 @@ def search(request):
         if request.GET.get('showTweetsWithLinks', False) is not False:
             showTweetsWithLinks = bool(request.GET['showTweetsWithLinks'])
 
-        if request.GET.get('replyCount', 0) is not 0:
+        if request.GET.get('replyCount', 0) != 0:
             replyCount = int(request.GET['replyCount'])
 
         if request.GET.get('hashtags', None) is not None:
@@ -111,7 +114,7 @@ def search(request):
             f_query = f_query + " AND " + "tweet_text:" + "(http)"
 
         # minimum replies filter
-        if replyCount is not 0:
+        if replyCount != 0:
             f_query = f_query + " AND " + "reply_count:" + "[" + str(replyCount) + "TO *" + "]"
 
         # hashtags filter
@@ -133,5 +136,6 @@ def search(request):
                                 "country": {"type": "terms", "field": "country", "limit": 10}}}
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()
+        json_response['time_taken'] = str(round((time.time() - start_time), 2))+' ms'
         print(json_response)
         return JsonResponse(json_response)
