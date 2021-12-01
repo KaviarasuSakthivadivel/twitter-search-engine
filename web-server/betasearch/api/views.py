@@ -28,14 +28,18 @@ def search(request):
         showTweetsWithLinks = False
         replyCount = 0
         hashtags = None
+        
         if request.data.get('poiName', None) is not None:
-            poiName = str(request.data['poiName'])
+            poiName = list(request.data['poiName'])
+            poiName = ' '.join(poiName)
 
         if request.data.get('tweetLang', None) is not None:
-            tweetLang = str(request.data['tweetLang'])
+            tweetLang = list(request.data['tweetLang'])
+            tweetLang = ' '.join(tweetLang)
 
         if request.data.get('country', None) is not None:
-            country = str(request.data['country'])
+            country = list(request.data['country'])
+            country = ' '.join(country)
 
         if request.data.get('timestamp', None) is not None:
             timestamp = float(request.data['timestamp'])
