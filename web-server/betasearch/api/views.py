@@ -143,3 +143,18 @@ def search(request):
         json_response['time_taken'] = str(round((time.time() - start_time), 2))+' s'
         print(json_response)
         return JsonResponse(json_response)
+
+def get_replies(request, tweet_id):
+
+    #method to get the replies for a tweet using tweet id invoked by /api/get_replies/tweet_id/"
+    q="replied_to_tweet_id:"+tweet_id
+    q = urllib.parse.quote(q, encoding="UTF-8")
+
+    reply_query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
+                      q
+    response=requests.get(reply_query)
+    json_response=response.json()
+    return JsonResponse(json_response)
+                      
+    
+    
