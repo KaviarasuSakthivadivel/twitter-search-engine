@@ -56,53 +56,56 @@ export default {
         async fetchResults() {
             let { queryParams } = this.constructQueries()
             this.loading = true
-            let response = await this.$axios.post(`api/search`, queryParams)
-            console.log(response)
-            this.tweetsList = response?.data?.response?.docs || []
-            let allHighlights = response?.data?.highlighting
-            this.tweetsList.forEach((tweet) => {
-                let highlightedText =
-                    this.$_.get(allHighlights, [
-                        `${tweet.id}`,
-                        'tweet_text',
-                        '0',
-                    ]) || tweet.tweet_text
+            try {
+                let response = await this.$axios.post(`api/search`, queryParams)
+                this.tweetsList = response?.data?.response?.docs || []
+                let allHighlights = response?.data?.highlighting
+                this.tweetsList.forEach((tweet) => {
+                    let highlightedText =
+                        this.$_.get(allHighlights, [
+                            `${tweet.id}`,
+                            'tweet_text',
+                            '0',
+                        ]) || tweet.tweet_text
 
-                let urls_regex = /((https?:\/\/\S+))/g
-                let replaceUrls = '<a target="_blank" href="$1">$1</a>'
-                highlightedText = highlightedText.replace(
-                    urls_regex,
-                    replaceUrls
-                )
+                    let urls_regex = /((https?:\/\/\S+))/g
+                    let replaceUrls = '<a target="_blank" href="$1">$1</a>'
+                    highlightedText = highlightedText.replace(
+                        urls_regex,
+                        replaceUrls
+                    )
 
-                let mentions_regex = /(^|[^@\w])@(\w{1,15})\b/g
-                let replace =
-                    '<span style="color: rgb(29, 155, 240);">$1<a target="_blank" href="http://twitter.com/$2">@$2</a></span>'
+                    let mentions_regex = /(^|[^@\w])@(\w{1,15})\b/g
+                    let replace =
+                        '<span style="color: rgb(29, 155, 240);">$1<a target="_blank" href="http://twitter.com/$2">@$2</a></span>'
 
-                highlightedText = highlightedText.replace(
-                    mentions_regex,
-                    replace
-                )
+                    highlightedText = highlightedText.replace(
+                        mentions_regex,
+                        replace
+                    )
 
-                let hashtags_regex =
-                    /(^|[^#\w])#(\w{1,100}|<em>\w{1,100}<\/em>)/g
-                let replaceHashTags =
-                    '<span style="color: rgb(29, 155, 240);">$1<a target="_blank" href="http://localhost:8080/searchresults?searchquery=#$2">#$2</a></span>'
+                    let hashtags_regex =
+                        /(^|[^#\w])#(\w{1,100}|<em>\w{1,100}<\/em>)/g
+                    let replaceHashTags =
+                        '<span style="color: rgb(29, 155, 240);">$1<a target="_blank" href="http://localhost:8080/searchresults?searchquery=#$2">#$2</a></span>'
 
-                highlightedText = highlightedText.replace(
-                    hashtags_regex,
-                    replaceHashTags
-                )
+                    highlightedText = highlightedText.replace(
+                        hashtags_regex,
+                        replaceHashTags
+                    )
 
-                this.$set(tweet, 'highlightedText', highlightedText)
-            })
-            this.totalDocs = response?.data?.response?.numFound || 0
-            this.$emit('setParams', {
-                count: this.totalDocs,
-                timeTaken: response?.data?.time_taken,
-            })
-            bus.$emit('chartData', response?.data?.facets)
-            this.loading = false
+                    this.$set(tweet, 'highlightedText', highlightedText)
+                })
+                this.totalDocs = response?.data?.response?.numFound || 0
+                this.$emit('setParams', {
+                    count: this.totalDocs,
+                    timeTaken: response?.data?.time_taken,
+                })
+                bus.$emit('chartData', response?.data?.facets)
+                this.loading = false
+            } catch (error) {
+                this.$message.error(error?.message || 'Server Error')
+            }
         },
         nextPage() {
             this.fetchResults()

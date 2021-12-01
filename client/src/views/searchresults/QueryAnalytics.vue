@@ -9,13 +9,7 @@
                 />
                 <div>
                     <el-skeleton-item variant="p" style="width: 50%" />
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            justify-items: space-between;
-                        "
-                    >
+                    <div class="flex items-center justify-center">
                         <el-skeleton-item
                             variant="text"
                             style="margin-right: 16px"
@@ -56,13 +50,13 @@
             :chartName="'langChart'"
             :chartData="poiChartData"
             :height="300"
-            :widht="300"
+            :width="300"
         ></TwCharts>
         <TwCharts
             :chartName="'poiChart'"
             :chartData="langChartData"
             :height="300"
-            :widht="300"
+            :width="300"
             class="mt-5"
         ></TwCharts>
     </div>
@@ -73,75 +67,80 @@ const poiChartDataOptions = {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
-        type: 'pie'
+        type: 'pie',
     },
     title: {
-        text: 'POI wise stats'
+        text: 'POI wise stats',
     },
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
     },
     accessibility: {
         point: {
-            valueSuffix: '%'
-        }
+            valueSuffix: '%',
+        },
     },
     plotOptions: {
         pie: {
             allowPointSelect: true,
             cursor: 'pointer',
             dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-        }
+                enabled: false,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+            },
+            showInLegend: false,
+        },
     },
-    series: [{
-        name: 'POI',
-        colorByPoint: true,
-        data: []
-    }]
-};
+    series: [
+        {
+            name: 'POI',
+            colorByPoint: true,
+            data: [],
+        },
+    ],
+}
 const countryChartDataOptions = {
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
-        type: 'pie'
+        type: 'pie',
     },
     title: {
-        text: 'Country wise stats'
+        text: 'Country wise stats',
     },
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
     },
     accessibility: {
         point: {
-            valueSuffix: '%'
-        }
+            valueSuffix: '%',
+        },
     },
     plotOptions: {
         pie: {
             allowPointSelect: true,
             cursor: 'pointer',
             dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-        }
+                enabled: false,
+            },
+            showInLegend: true,
+        },
     },
-    series: [{
-        name: 'Country',
-        colorByPoint: true,
-        data: []
-    }]
-};
+    series: [
+        {
+            name: 'Country',
+            colorByPoint: true,
+            data: [],
+        },
+    ],
+}
 import { bus } from '@/components/bus'
 export default {
     data: () => ({
         loading: true,
         poiChartData: poiChartDataOptions,
-		langChartData: countryChartDataOptions,
+        langChartData: countryChartDataOptions,
     }),
     created() {
         bus.$on('chartData', (data) => {
@@ -150,23 +149,23 @@ export default {
     },
     methods: {
         formatChartData(data) {
-			if(data && data.poi_name) {
-				const poiBucketJSON = data.poi_name.buckets;
-				let poiChartDataArr = [];
-				poiBucketJSON.forEach((bucket) => {
-					poiChartDataArr.push({"name": bucket.val, "y": bucket.count});
-				});
-				this.poiChartData.series[0].data = poiChartDataArr
-			}
-			if(data && data.tweet_lang) {
-				const tweetLangJSON = data.tweet_lang.buckets;
-				let tweetLangDataArr = [];
-				tweetLangJSON.forEach((bucket) => {
-					tweetLangDataArr.push({"name": bucket.val, "y": bucket.count});
-				});
-				this.langChartData.series[0].data = tweetLangDataArr
-			}
-			this.loading=false;
+            if (data && data.poi_name) {
+                const poiBucketJSON = data.poi_name.buckets
+                let poiChartDataArr = []
+                poiBucketJSON.forEach((bucket) => {
+                    poiChartDataArr.push({ name: bucket.val, y: bucket.count })
+                })
+                this.poiChartData.series[0].data = poiChartDataArr
+            }
+            if (data && data.tweet_lang) {
+                const tweetLangJSON = data.tweet_lang.buckets
+                let tweetLangDataArr = []
+                tweetLangJSON.forEach((bucket) => {
+                    tweetLangDataArr.push({ name: bucket.val, y: bucket.count })
+                })
+                this.langChartData.series[0].data = tweetLangDataArr
+            }
+            this.loading = false
         },
     },
 }

@@ -1,5 +1,5 @@
 <template>
-    <div :id="chartName" style="width:100%; height:200px;"></div>
+    <div :id="chartName" :style="`width:${width}px; height:${height}px;`"></div>
 </template>
 <script>
 import Highcharts from 'highcharts'
@@ -10,11 +10,8 @@ export default {
         height: { required: false },
         width: { required: false },
     },
-    data: () => ({
-        chartDataClone: {},
-    }),
     mounted() {
-        Highcharts.chart(this.chartName, this.chartData);
+        Highcharts.chart(this.chartName, this.$_.clone(this.chartData))
     },
 }
 </script>

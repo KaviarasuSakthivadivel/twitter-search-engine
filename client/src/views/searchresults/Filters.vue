@@ -38,7 +38,7 @@
                 <div class="mt-5">Country</div>
                 <el-select
                     class="mt-5"
-                    v-model="selectedCountry"
+                    v-model="country"
                     clearable
                     multiple
                     collapse-tags
@@ -54,7 +54,7 @@
                 <div class="mt-5">Sentiment</div>
                 <el-select
                     class="mt-5"
-                    v-model="selectedSentiment"
+                    v-model="sentiment"
                     clearable
                     multiple
                     collapse-tags
@@ -82,15 +82,13 @@
                 >
                 </el-date-picker>
                 <div class="mt-5">Minimum replies</div>
-                <el-input type="number" v-model="minimumReplies"></el-input>
+                <el-input type="number" v-model="replyCount"></el-input>
                 <div class="mt-5">Show only POI Tweets</div>
-                <el-switch class="mt-5" v-model="showOnlyPoiTweets">
-                </el-switch>
+                <el-switch class="mt-5" v-model="showOnlyPoi"> </el-switch>
                 <div class="mt-5">Show only Replies</div>
-                <el-switch class="mt-5" v-model="showOnlyReplyTweets">
-                </el-switch>
+                <el-switch class="mt-5" v-model="showOnlyReplies"> </el-switch>
                 <div class="mt-5">Show only Tweets with link</div>
-                <el-switch class="mt-5" v-model="showOnlyLinkTweets">
+                <el-switch class="mt-5" v-model="showTweetsWithLinks">
                 </el-switch>
                 <div class="mt-5">
                     <el-button @click="applyFilters" type="primary" round
@@ -103,21 +101,20 @@
     </div>
 </template>
 <script>
-const poiList = ['CDCGov', 'narendramodi']
-import { filterFields } from '@/helpers/constants'
+import { filterFields, poiList } from '@/helpers/constants'
 export default {
     data: () => ({
         poiName: [],
         tweetLang: [],
-        selectedSentiment: [],
-        selectedCountry: [],
-        showOnlyPoiTweets: false,
-        showOnlyReplyTweets: false,
-        showOnlyLinkTweets: false,
+        sentiment: [],
+        country: [],
+        showOnlyPoi: false,
+        showOnlyReplies: false,
+        showTweetsWithLinks: false,
         dateRange: null,
         hashtags: '',
         mentions: '',
-        minimumReplies: null,
+        replyCount: null,
         poiList,
         languages: [
             { displayName: 'English', value: 'eng' },
