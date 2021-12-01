@@ -28,7 +28,7 @@ class Indexer:
     def __init__(self):
         self.solr_url = 'http://' + AWS_IP + ':8983/solr/'
         self.core_url = self.solr_url + CORE_NAME
-        self.connection = pysolr.Solr(self.core_url, always_commit=True, timeout=5000000)
+        self.connection = pysolr.Solr(self.core_url, always_commit=True, timeout=50000)
 
     def do_initial_setup(self):
         delete_core()

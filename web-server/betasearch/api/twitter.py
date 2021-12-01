@@ -44,10 +44,20 @@ class Twitter:
         
     def get_metrics(self,tweet_id):
         tweet_fieldsList=["id","public_metrics"]
-        user_fieldsList=["public_metrics","profile_image_url","verified"]
-        all_metrics=self.TwitterClient.get_tweet(tweet_id,tweet_fields=tweet_fieldsList,user_fields=user_fieldsList)
+        user_fieldsList=["verified","profile_image_url","name","username"]
+        all_metrics=self.TwitterClient.get_tweet(tweet_id,tweet_fields=tweet_fieldsList,expansions="author_id",user_fields=user_fieldsList)
         tweet =all_metrics.data
-        
 
-        return tweet
+        includes=all_metrics.includes
+        if not bool(includes):
+            includes=None
+
+
+        return tweet,includes
+
+    
+if __name__ == '__main__':
+    t=Twitter()
+    print(t.get_metrics("1437216869597921283")[0])
+    print(t.get_metrics("1437216869597921283")[1]['users'][0].name)
 

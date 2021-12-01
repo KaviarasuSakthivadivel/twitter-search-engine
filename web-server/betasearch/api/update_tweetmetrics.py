@@ -5,7 +5,7 @@ from twitter import Twitter
 
 
 def download_data(core, aws_url, total_docs):
-    count = 1000
+    count = 2
     pages = int(total_docs / count)
     rows = count
     for i in range(pages):
@@ -29,17 +29,31 @@ def update_doc_withmetrics(docs):
     for doc in docs:
         tweet_id=doc['id']
         tweet=t.get_metrics(tweet_id)
-        if tweet is not None:
-            public_metrics=tweet.public_metrics
+        tweet_metrics=tweet[0]
+        tweet_includes=tweet[1]
+        if tweet_metrics is not None:
+            public_metrics=tweet_metrics.public_metrics
             doc['reply_count']=public_metrics['reply_count']
             doc['retweet_count']=public_metrics['retweet_count']
             doc['like_count']=public_metrics['like_count']
             doc['quote_count']=public_metrics['quote_count']
+            
         else:
             doc['reply_count']=0
             doc['retweet_count']=0
             doc['like_count']=0
             doc['quote_count']=0
+        if tweet_includes is not None:
+            doc['username']=tweet_includes['users'][0].username
+            doc['profile_name']=tweet_includes['users'][0].name
+            doc['profile_url']=tweet_includes['users'][0].profile_image_url
+            doc['verified']=tweet_includes['users'][0].verified
+            
+                
+
+
+        
+
         
         
     return docs
