@@ -150,19 +150,22 @@ export default {
     },
     methods: {
         formatChartData(data) {
-            const poiBucketJSON = data.poi_name.buckets;
-			let poiChartDataArr = [];
-			poiBucketJSON.forEach((bucket) => {
-				poiChartDataArr.push({"name": bucket.val, "y": bucket.count});
-			});
-			this.poiChartData.series[0].data = poiChartDataArr
-
-			const tweetLangJSON = data.tweet_lang.buckets;
-			let tweetLangDataArr = [];
-			tweetLangJSON.forEach((bucket) => {
-				tweetLangDataArr.push({"name": bucket.val, "y": bucket.count});
-			});
-			this.langChartData.series[0].data = tweetLangDataArr
+			if(data && data.poi_name) {
+				const poiBucketJSON = data.poi_name.buckets;
+				let poiChartDataArr = [];
+				poiBucketJSON.forEach((bucket) => {
+					poiChartDataArr.push({"name": bucket.val, "y": bucket.count});
+				});
+				this.poiChartData.series[0].data = poiChartDataArr
+			}
+			if(data && data.tweet_lang) {
+				const tweetLangJSON = data.tweet_lang.buckets;
+				let tweetLangDataArr = [];
+				tweetLangJSON.forEach((bucket) => {
+					tweetLangDataArr.push({"name": bucket.val, "y": bucket.count});
+				});
+				this.langChartData.series[0].data = tweetLangDataArr
+			}
 			this.loading=false;
         },
     },
