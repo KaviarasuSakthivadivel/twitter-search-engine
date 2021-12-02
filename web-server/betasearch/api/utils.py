@@ -72,7 +72,6 @@ def get_tweet_insights(core, aws_url, total_docs):
                 doc = update_doc_with_metrics(doc)
                 processed_docs.append(doc)
         if len(processed_docs) > 0:
-            print(processed_docs)
             index_data(processed_docs)
 
 
