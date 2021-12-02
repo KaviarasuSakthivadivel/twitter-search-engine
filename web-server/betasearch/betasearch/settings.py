@@ -128,4 +128,4 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORE = 'IRF21P1_demo'
-AWS_URL = '3.15.218.16'
+AWS_URL = '3.20.12.127'

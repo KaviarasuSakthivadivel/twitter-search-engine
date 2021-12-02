@@ -1,102 +1,106 @@
 <template>
-    <div class="p-5 overflow-y-scroll filters-wrapper">
-        <div class="font-bold">Filters</div>
-        <div class="mt-5">
+    <div class="p-5 filters-wrapper">
+        <div class="flex justify-between items-center filters-border">
+            <div class="font-bold">Filters</div>
             <div>
-                <div>POI Name</div>
-                <el-select
-                    class="mt-5"
-                    v-model="poiName"
-                    clearable
-                    multiple
-                    collapse-tags
+                <el-button @click="applyFilters" type="primary" round
+                    >Apply</el-button
                 >
-                    <el-option
-                        v-for="(poi, index) in poiList"
-                        :key="index"
-                        :label="poi"
-                        :value="poi"
-                    >
-                    </el-option>
-                </el-select>
-                <div class="mt-5">Languages</div>
-                <el-select
-                    class="mt-5"
-                    v-model="tweetLang"
-                    clearable
-                    multiple
-                    collapse-tags
-                >
-                    <el-option
-                        v-for="(lang, index) in languages"
-                        :key="index"
-                        :label="lang.displayName"
-                        :value="lang.value"
-                    >
-                    </el-option>
-                </el-select>
-                <div class="mt-5">Country</div>
-                <el-select
-                    class="mt-5"
-                    v-model="country"
-                    clearable
-                    multiple
-                    collapse-tags
-                >
-                    <el-option
-                        v-for="(country, index) in countries"
-                        :key="index"
-                        :label="country"
-                        :value="country"
-                    >
-                    </el-option>
-                </el-select>
-                <div class="mt-5">Sentiment</div>
-                <el-select
-                    class="mt-5"
-                    v-model="sentiment"
-                    clearable
-                    multiple
-                    collapse-tags
-                >
-                    <el-option
-                        v-for="(sent, index) in sentiments"
-                        :key="index"
-                        :label="sent"
-                        :value="sent"
-                    >
-                    </el-option>
-                </el-select>
-                <div class="mt-5">Hashtags</div>
-                <el-input v-model="hashtags"></el-input>
-                <div class="mt-5">Mentions</div>
-                <el-input v-model="mentions"></el-input>
-                <div class="mt-5">Created at date range</div>
-                <el-date-picker
-                    class="mt-5"
-                    v-model="dateRange"
-                    type="daterange"
-                    range-separator="-"
-                    start-placeholder="Start date"
-                    end-placeholder="End date"
-                >
-                </el-date-picker>
-                <div class="mt-5">Minimum replies</div>
-                <el-input type="number" v-model="minimumReplies"></el-input>
-                <div class="mt-5">Show only POI Tweets</div>
-                <el-switch class="mt-5" v-model="showOnlyPoi"> </el-switch>
-                <div class="mt-5">Show only Replies</div>
-                <el-switch class="mt-5" v-model="showOnlyReplies"> </el-switch>
-                <div class="mt-5">Show only Tweets with link</div>
-                <el-switch class="mt-5" v-model="showTweetsWithLinks">
-                </el-switch>
-                <div class="mt-5">
-                    <el-button @click="applyFilters" type="primary" round
-                        >Apply</el-button
-                    >
-                    <el-button @click="removeFilter" round>Clear</el-button>
-                </div>
+                <el-button @click="removeFilter" round>Clear</el-button>
             </div>
+        </div>
+        <div class="mt-5 overflow-y-scroll filter-height">
+            <div>POI Name</div>
+            <el-select
+                class="mt-5 w-full"
+                v-model="poiName"
+                clearable
+                multiple
+                collapse-tags
+            >
+                <el-option
+                    v-for="(poi, index) in poiList"
+                    :key="index"
+                    :label="poi"
+                    :value="poi"
+                >
+                </el-option>
+            </el-select>
+            <div class="mt-5">Languages</div>
+            <el-select
+                class="mt-5 w-full"
+                v-model="tweetLang"
+                clearable
+                multiple
+                collapse-tags
+            >
+                <el-option
+                    v-for="(lang, index) in languages"
+                    :key="index"
+                    :label="lang.displayName"
+                    :value="lang.value"
+                >
+                </el-option>
+            </el-select>
+            <div class="mt-5">Country</div>
+            <el-select
+                class="mt-5 w-full"
+                v-model="country"
+                clearable
+                multiple
+                collapse-tags
+            >
+                <el-option
+                    v-for="(country, index) in countries"
+                    :key="index"
+                    :label="country"
+                    :value="country"
+                >
+                </el-option>
+            </el-select>
+            <div class="mt-5">Sentiment</div>
+            <el-select
+                class="mt-5 w-full"
+                v-model="sentiment"
+                clearable
+                multiple
+                collapse-tags
+            >
+                <el-option
+                    v-for="(sent, index) in sentiments"
+                    :key="index"
+                    :label="sent"
+                    :value="sent"
+                >
+                </el-option>
+            </el-select>
+            <div class="mt-5">Hashtags</div>
+            <el-input v-model="hashtags"></el-input>
+            <div class="mt-5">Mentions</div>
+            <el-input v-model="mentions"></el-input>
+            <div class="mt-5">Created at date range</div>
+            <el-date-picker
+                class="mt-5 w-full"
+                v-model="dateRange"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="Start date"
+                end-placeholder="End date"
+            >
+            </el-date-picker>
+            <div class="mt-5">Minimum replies</div>
+            <el-input-number
+                class="mt-5"
+                v-model="minimumReplies"
+                :min="0"
+            ></el-input-number>
+            <div class="mt-5">Show only POI Tweets</div>
+            <el-switch class="mt-5" v-model="showOnlyPoi"> </el-switch>
+            <div class="mt-5">Show only Replies</div>
+            <el-switch class="mt-5" v-model="showOnlyReplies"> </el-switch>
+            <div class="mt-5">Show only Tweets with link</div>
+            <el-switch class="mt-5 mb-10" v-model="showTweetsWithLinks">
+            </el-switch>
         </div>
     </div>
 </template>
@@ -122,7 +126,7 @@ export default {
             { displayName: 'Hindi', value: 'hi' },
         ],
         countries: ['USA', 'India', 'Mexico'],
-        sentiments: ['Positive', 'Negative', 'Neutral'],
+        sentiments: ['positive', 'negative', 'neutral'],
         timestamp: null,
     }),
     created() {
