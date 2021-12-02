@@ -7,7 +7,7 @@ import requests
 
 CORE_NAME = "IRF21P1_demo"
 # AWS_IP = "ec2-18-218-166-215.us-east-2.compute.amazonaws.com"
-AWS_IP = "3.15.218.16"
+AWS_IP = "3.20.12.127"
 # AWS_IP = "localhost"
 
 
@@ -177,9 +177,63 @@ class Indexer:
                     "name": "text_hi",
                     "type": "text_hi",
                     "multiValued": False
+                },
+                {
+                    "name": "sentiment",
+                    "type": "text_general",
+                    "multiValued": False
+                },
+                {
+                    "name": "doc_score",
+                    "type": "pdouble",
+                    "multiValued": False
+                },
+                {
+                    "name": "doc_magnitude",
+                    "type": "pdouble",
+                    "multiValued": False
                 }
             ]
         }
+        print(requests.post(self.core_url + "/schema", json=request_data).json())
+
+    def add_sentiment_fields(self):
+        request_data = {
+            "add-field": [
+                {
+                    "name": "sentiment",
+                    "type": "text_general",
+                    "multiValued": False
+                },
+                {
+                    "name": "doc_score",
+                    "type": "pdouble",
+                    "multiValued": False
+                },
+                {
+                    "name": "doc_magnitude",
+                    "type": "pdouble",
+                    "multiValued": False
+                }
+            ]
+        }
+        print(requests.post(self.core_url + "/schema", json=request_data).json())
+
+    def delete_sentiment_fields(self):
+        request_data = {
+            "delete-field": [
+                {
+                    "name": "doc_score",
+                },
+                {
+                    "name": "doc_magnitude",
+                },
+                {
+                    "name": "sentiment",
+                }
+            ]
+        }
+
         print(requests.post(self.core_url + "/schema", json=request_data).json())
 
     def replace_BM25(self, b=None, k1=None):
@@ -295,8 +349,9 @@ class Indexer:
         print(requests.post(self.solr_url + CORE_NAME + "/schema", json=data).json())
 
 
-# if __name__ == "__main__":
-#     i = Indexer()
-#     i.do_initial_setup()
-#     i.delete_fields()
-#     i.add_fields()
+if __name__ == "__main__":
+    #     i.do_initial_setup()
+    #     i.delete_fields()
+    i = Indexer()
+    i.delete_sentiment_fields()
+    i.add_sentiment_fields()
