@@ -119,7 +119,7 @@ if __name__ == '__main__':
     ############### Sentiment analysis code from google API ############
     arguments = sys.argv
     type = arguments[1]
-    if type == 1:
+    if type == "1":
         print("coming in 1")
         do_sentiment_analysis(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=400000)  # Kavi
     else:

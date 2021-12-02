@@ -2,9 +2,12 @@
 
 For server build
 
-1. Install required python modules (`django`, `djangorestframework`, `django-cors-headers`, `googletrans` etc.,)
-2. Change working directory to `web-server/betasearch`
-3. Run `python3 manage.py runserver`
+1. Install required python modules
+   
+    `pip3 install django djangorestframework django-cors-headers googletrans==4.0.0-rc1 google-cloud-language pysolr tweepy`
+
+3. Change working directory to `web-server/betasearch`
+4. Run `python3 manage.py runserver`
 
 For Client build
 
