@@ -9,16 +9,9 @@ export const filterFields = [
     'showOnlyPoi',
     'showOnlyReplies',
     'showTweetsWithLinks',
-    'replyCount',
     'hashtags',
 ]
-export const arrayFields = [
-    'poiName',
-    'tweetLang',
-    'country',
-    'sentiment',
-    'hashtags',
-]
+export const arrayFields = ['poiName', 'tweetLang', 'country', 'sentiment']
 
 export const poiList = [
     'lopezobrador_',

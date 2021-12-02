@@ -82,7 +82,7 @@
                 >
                 </el-date-picker>
                 <div class="mt-5">Minimum replies</div>
-                <el-input type="number" v-model="replyCount"></el-input>
+                <el-input type="number" v-model="minimumReplies"></el-input>
                 <div class="mt-5">Show only POI Tweets</div>
                 <el-switch class="mt-5" v-model="showOnlyPoi"> </el-switch>
                 <div class="mt-5">Show only Replies</div>
@@ -94,14 +94,14 @@
                     <el-button @click="applyFilters" type="primary" round
                         >Apply</el-button
                     >
-                    <el-button round>Clear</el-button>
+                    <el-button @click="removeFilter" round>Clear</el-button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { filterFields, poiList } from '@/helpers/constants'
+import { filterFields, arrayFields, poiList } from '@/helpers/constants'
 export default {
     data: () => ({
         poiName: [],
@@ -114,38 +114,44 @@ export default {
         dateRange: null,
         hashtags: '',
         mentions: '',
-        replyCount: null,
+        minimumReplies: null,
         poiList,
         languages: [
-            { displayName: 'English', value: 'eng' },
+            { displayName: 'English', value: 'en' },
             { displayName: 'Spanish', value: 'es' },
             { displayName: 'Hindi', value: 'hi' },
         ],
         countries: ['USA', 'India', 'Mexico'],
         sentiments: ['Positive', 'Negative', 'Neutral'],
+        timestamp: null,
     }),
     created() {
-        filterFields.forEach((field) => {
-            if (!this.$_.isEmpty(this.$route.query[field])) {
-                if (this.$_.isArray(this[field])) {
-                    this.$set(
-                        this,
-                        `${field}`,
-                        JSON.parse(decodeURIComponent(this.$route.query[field]))
-                    )
-                } else {
-                    this.$set(
-                        this,
-                        field,
-                        decodeURIComponent(this.$route.query[field])
-                    )
-                }
-            }
-        })
+        this.initFilterFields()
     },
     methods: {
+        initFilterFields() {
+            filterFields.forEach((field) => {
+                if (!this.$_.isEmpty(this.$route.query[field])) {
+                    if (this.$_.isArray(this[field])) {
+                        this.$set(
+                            this,
+                            `${field}`,
+                            JSON.parse(
+                                decodeURIComponent(this.$route.query[field])
+                            )
+                        )
+                    } else {
+                        this.$set(
+                            this,
+                            field,
+                            decodeURIComponent(this.$route.query[field])
+                        )
+                    }
+                }
+            })
+        },
         applyFilters() {
-            let query = { ...this.$route.query }
+            let query = { searchquery: this.$route.query.searchquery }
             filterFields.forEach((field) => {
                 if (!this.$_.isEmpty(this[field])) {
                     if (this.$_.isArray(this[field])) {
@@ -161,6 +167,21 @@ export default {
             })
             this.$router.replace({
                 query: query,
+            })
+        },
+        removeFilter() {
+            let query = { searchquery: this.$route.query.searchquery }
+            this.$router.replace({
+                query: query,
+            })
+            this.$nextTick(() => {
+                filterFields.forEach((field) => {
+                    if (arrayFields.includes(field)) {
+                        this.$set(this, field, [])
+                    } else {
+                        this.$set(this, field, null)
+                    }
+                })
             })
         },
     },

@@ -70,7 +70,7 @@ const poiChartDataOptions = {
         type: 'pie',
     },
     title: {
-        text: 'POI wise stats',
+        text: 'POI stats',
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
@@ -107,7 +107,7 @@ const countryChartDataOptions = {
         type: 'pie',
     },
     title: {
-        text: 'Country wise stats',
+        text: 'Language wise stats',
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
@@ -135,6 +135,7 @@ const countryChartDataOptions = {
         },
     ],
 }
+const langVsLabel = { en: 'English', es: 'Spanish', hi: 'Hindi' }
 import { bus } from '@/components/bus'
 export default {
     data: () => ({
@@ -144,7 +145,10 @@ export default {
     }),
     created() {
         bus.$on('chartData', (data) => {
-            this.formatChartData(data)
+            this.loading = true
+            this.$nextTick(() => {
+                this.formatChartData(data)
+            })
         })
     },
     methods: {
@@ -161,7 +165,10 @@ export default {
                 const tweetLangJSON = data.tweet_lang.buckets
                 let tweetLangDataArr = []
                 tweetLangJSON.forEach((bucket) => {
-                    tweetLangDataArr.push({ name: bucket.val, y: bucket.count })
+                    tweetLangDataArr.push({
+                        name: langVsLabel[bucket.val],
+                        y: bucket.count,
+                    })
                 })
                 this.langChartData.series[0].data = tweetLangDataArr
             }
