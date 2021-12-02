@@ -67,9 +67,10 @@ def get_tweet_insights(core, aws_url, total_docs):
         docs = json_response['response']['docs']
         processed_docs = []
         for doc in docs:
-            del doc['_version_']
-            doc = update_doc_with_metrics(doc)
-            processed_docs.append(doc)
+            if 'profile_url' not in doc:
+                del doc['_version_']
+                doc = update_doc_with_metrics(doc)
+                processed_docs.append(doc)
         if len(processed_docs) > 0:
             print(processed_docs)
             index_data(processed_docs)
