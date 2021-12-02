@@ -19,6 +19,7 @@ def search(request):
         pageNo = int(request.data['pageNo'])
         pageSize = int(request.data['pageSize'])
         poiName = None
+        sentiment = None
         tweetLang = None
         country = None
         timestamp = None
@@ -28,10 +29,14 @@ def search(request):
         showTweetsWithLinks = False
         replyCount = 0
         hashtags = None
-        
+
         if request.data.get('poiName', None) is not None:
             poiName = list(request.data['poiName'])
             poiName = ' '.join(poiName)
+
+        if request.data.get('sentiment', None) is not None:
+            sentiment = list(request.data['sentiment'])
+            sentiment = ' '.join(sentiment)
 
         if request.data.get('tweetLang', None) is not None:
             tweetLang = list(request.data['tweetLang'])
@@ -80,12 +85,16 @@ def search(request):
         # query generation for text_en ,text_hi,text_es fields
         query = "text_en:" + "(" + query + ")^10" + " OR " + "text_es:" + "(" + query + ")^10" + " OR " + "text_hi:" + "(" + query + ")^10" + \
                 "text_en:" + "(" + query_en + ")" + " OR " + "text_es:" + \
-                "(" + query_es + ")" + " OR " + "text_hi:" + "(" + query_hi + ")"
+                "(" + query_es + ")" + " OR " + \
+            "text_hi:" + "(" + query_hi + ")"
         q = urllib.parse.quote(query, encoding="UTF-8")
 
         # POI Name filter
         if poiName is not None:
             f_query = f_query + " AND " + "poi_name:" + "(" + poiName + ")"
+
+        if sentiment is not None:
+            f_query = f_query + " AND " + "sentiment:" + "(" + sentiment + ")"
 
         # Language filter
         if tweetLang is not None:
@@ -99,7 +108,8 @@ def search(request):
         if timestamp is not None:
             timestamp = datetime.date.fromtimestamp(timestamp)
             tweetDate = timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
-            f_query = f_query + " AND " + "tweet_date:" + "[" + tweetDate + " TO NOW" + "]"
+            f_query = f_query + " AND " + "tweet_date:" + \
+                "[" + tweetDate + " TO NOW" + "]"
 
         # mentions filter
         if mentions is not None:
@@ -119,7 +129,8 @@ def search(request):
 
         # minimum replies filter
         if replyCount != 0:
-            f_query = f_query + " AND " + "reply_count:" + "[" + str(replyCount) + "TO *" + "]"
+            f_query = f_query + " AND " + "reply_count:" + \
+                "[" + str(replyCount) + "TO *" + "]"
 
         # hashtags filter
         if hashtags is not None:
@@ -132,7 +143,8 @@ def search(request):
                       '&hl=true&hl.requireFieldMatch=false&hl.usePhraseHighLighter=false&hl.highlightMultiTerm' \
                       '=false&hl.fl=tweet_text '
         if f_query is not None:
-            final_query += '&fq=' + urllib.parse.quote(f_query, encoding="UTF-8")
+            final_query += '&fq=' + \
+                urllib.parse.quote(f_query, encoding="UTF-8")
 
         # Facet query formulations
         facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
@@ -140,21 +152,19 @@ def search(request):
                                 "country": {"type": "terms", "field": "country", "limit": 10}}}
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()
-        json_response['time_taken'] = str(round((time.time() - start_time), 2))+' s'
-        print(json_response)
+        json_response['time_taken'] = str(
+            round((time.time() - start_time), 2))+'s'
         return JsonResponse(json_response)
+
 
 def get_replies(request, tweet_id):
 
-    #method to get the replies for a tweet using tweet id invoked by /api/get_replies/tweet_id/"
-    q="replied_to_tweet_id:"+tweet_id
+    # method to get the replies for a tweet using tweet id invoked by /api/get_replies/tweet_id/"
+    q = "replied_to_tweet_id:"+tweet_id
     q = urllib.parse.quote(q, encoding="UTF-8")
 
-    reply_query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-                      q
-    response=requests.get(reply_query)
-    json_response=response.json()
+    reply_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
+        q
+    response = requests.get(reply_query)
+    json_response = response.json()
     return JsonResponse(json_response)
-                      
-    
-    

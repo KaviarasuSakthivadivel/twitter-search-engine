@@ -16,27 +16,17 @@
                 >Search</el-button
             >
         </div>
-        <div
-            v-if="count && timeTaken"
-            class="mt-3 flex items-center justify-center fetched-tweet-text"
-        >
-            Fetched &nbsp;<b>{{ `${count}` }}</b
-            >&nbsp; tweets in &nbsp;
-            <b>{{ `${timeTaken}` }}</b>
-        </div>
         <div class="flex flex-row justify-between mt-5 tw-results-parent">
             <Filters class="h-full border-r border-color1 w-1/4"></Filters>
             <TweetCardsList
-                class="h-full border-r border-color1 w-2/4"
+                class="h-full border-color1 w-3/4"
                 @setParams="setParams"
             ></TweetCardsList>
-            <QueryAnalytics class="w-1/4"></QueryAnalytics>
         </div>
     </div>
 </template>
 <script>
 import TweetCardsList from './TweetCardsList.vue'
-import QueryAnalytics from './QueryAnalytics.vue'
 import Filters from './Filters.vue'
 export default {
     data: () => ({
@@ -47,7 +37,11 @@ export default {
     created() {
         this.searchQuery = this.$route.query.searchquery
     },
-    components: { TweetCardsList, QueryAnalytics, Filters },
+    components: {
+        TweetCardsList,
+        // QueryAnalytics,
+        Filters,
+    },
     methods: {
         routeToSearchResults() {
             if (
@@ -64,6 +58,7 @@ export default {
             this.count = count
             this.timeTaken = timeTaken
         },
+        handleClick() {},
     },
 }
 </script>

@@ -50,6 +50,11 @@ export default {
     data: () => ({
         activeTab: 'search',
     }),
+    created() {
+        if (this.$router.name == 'Analytics') {
+            this.activeTab = 'analytics'
+        }
+    },
     methods: {
         changeTab(name) {
             this.activeTab = name

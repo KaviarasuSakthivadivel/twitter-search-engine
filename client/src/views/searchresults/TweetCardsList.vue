@@ -4,40 +4,95 @@
         <el-skeleton :rows="4" animated class="mt-10" />
         <el-skeleton :rows="4" animated class="mt-10" />
     </div>
-    <div v-else class="flex flex-col p-5 overflow-y-scroll">
-        <div
-            v-for="(tweet, index) in tweetsList"
-            :key="`tw-card-${index}`"
-            :class="['border results-card', index != 0 && 'mt-5']"
-        >
-            <div class="flex flex-row">
-                {{ tweet.poi_name || 'Unknown' }}
-            </div>
-            <div class="mt-2" v-html="tweet.highlightedText"></div>
-        </div>
 
-        <div class="flex justify-center w-full mt-5">
-            <el-pagination
-                background
-                @current-change="nextPage"
-                :current-page.sync="pageNo"
-                :page-size="20"
-                layout="prev, pager, next"
-                :total="totalDocs"
+    <el-tabs v-else v-model="currentTab" class="pl-3 pr-3">
+        <el-tab-pane
+            label="Tweet Results"
+            name="tweet"
+            class="overflow-y-scroll tab-height1"
+        >
+            <div
+                v-if="totalDocs && timeTaken"
+                class="mt-3 flex items-center justify-center fetched-tweet-text"
             >
-            </el-pagination>
-        </div>
-    </div>
+                {{ `About ${totalDocs} tweets in ${timeTaken}` }}
+            </div>
+            <div class="flex flex-col p-5">
+                <div
+                    v-for="(tweet, index) in tweetsList"
+                    :key="`tw-card-${index}`"
+                    :class="[
+                        'results-card',
+                        index != 0 && 'mt-5',
+                        tweet.sentiment == 'neutral' && 'tw-border-grey',
+                        tweet.sentiment == 'negative' && 'tw-border-red',
+                        tweet.sentiment == 'positive' && 'tw-border-green',
+                    ]"
+                >
+                    <div
+                        @click="openTwitterProfile(tweet.poi_name)"
+                        class="flex flex-row items-center tw-name-parent"
+                    >
+                        <el-avatar
+                            size="small"
+                            icon="el-icon-user-solid"
+                        ></el-avatar>
+                        <div class="ml-3 tw-id-name">
+                            {{ $_.upperFirst(tweet.poi_name) || 'Unknown' }}
+                        </div>
+
+                        <InlineSvg
+                            src="verified"
+                            iconClass="icon size-sm ml-2px svg-color-blue"
+                        ></InlineSvg>
+                        <div class="ml-4px tw-handle-name">
+                            {{ `@${tweet.poi_name}` || '@unknown' }}
+                        </div>
+                    </div>
+                    <div class="mt-2" v-html="tweet.highlightedText"></div>
+                </div>
+
+                <div class="flex justify-center w-full mt-5">
+                    <el-pagination
+                        background
+                        @current-change="nextPage"
+                        :current-page.sync="pageNo"
+                        :page-size="20"
+                        layout="prev, pager, next"
+                        :total="totalDocs"
+                    >
+                    </el-pagination>
+                </div></div
+        ></el-tab-pane>
+        <el-tab-pane
+            label="Analytics"
+            name="analytics"
+            class="bg-grey tab-height2 rounded-xl"
+        >
+            <QueryAnalytics :chartData="chartData"></QueryAnalytics>
+        </el-tab-pane>
+        <el-tab-pane label="News Articles" name="news"
+            >News Articles</el-tab-pane
+        >
+    </el-tabs>
 </template>
 <script>
-import { bus } from '../../components/bus'
 import { filterFields, arrayFields } from '@/helpers/constants'
+import QueryAnalytics from './QueryAnalytics.vue'
+import InlineSvg from '../../components/InlineSvg.vue'
 export default {
+    components: {
+        QueryAnalytics,
+        InlineSvg,
+    },
     data: () => ({
         tweetsList: [],
         loading: true,
         pageNo: 1,
         totalDocs: null,
+        chartData: [],
+        currentTab: 'tweet',
+        timeTaken: null,
     }),
     created() {
         this.fetchResults()
@@ -97,11 +152,8 @@ export default {
                     this.$set(tweet, 'highlightedText', highlightedText)
                 })
                 this.totalDocs = response?.data?.response?.numFound || 0
-                this.$emit('setParams', {
-                    count: this.totalDocs,
-                    timeTaken: response?.data?.time_taken,
-                })
-                bus.$emit('chartData', response?.data?.facets)
+                this.timeTaken = response?.data?.time_taken
+                this.chartData = response?.data?.facets
                 this.loading = false
             } catch (error) {
                 this.$message.error(error?.message || 'Server Error')
@@ -135,6 +187,9 @@ export default {
                 }
             })
             return { queryParams: params }
+        },
+        openTwitterProfile(profile) {
+            window.open(`http://twitter.com/${profile}`)
         },
     },
 }

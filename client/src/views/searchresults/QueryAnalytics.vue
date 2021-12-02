@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loading" class="p-5 overflow-y-scroll">
+    <div v-if="loading" class="p-5 overflow-y-scroll q-bg">
         <el-skeleton animated style="width: 100%">
             <template slot="template">
                 <el-skeleton-item
@@ -45,19 +45,20 @@
             </template>
         </el-skeleton>
     </div>
-    <div v-else class="overflow-y-scroll p-5">
+    <div v-else class="overflow-y-scroll p-5 flex">
         <TwCharts
             :chartName="'langChart'"
             :chartData="poiChartData"
             :height="300"
             :width="300"
+            class="q-analytics-container"
         ></TwCharts>
         <TwCharts
             :chartName="'poiChart'"
             :chartData="langChartData"
             :height="300"
             :width="300"
-            class="mt-5"
+            class="ml-5 q-analytics-container"
         ></TwCharts>
     </div>
 </template>
@@ -136,20 +137,15 @@ const countryChartDataOptions = {
     ],
 }
 const langVsLabel = { en: 'English', es: 'Spanish', hi: 'Hindi' }
-import { bus } from '@/components/bus'
 export default {
+    props: ['chartData'],
     data: () => ({
         loading: true,
         poiChartData: poiChartDataOptions,
         langChartData: countryChartDataOptions,
     }),
     created() {
-        bus.$on('chartData', (data) => {
-            this.loading = true
-            this.$nextTick(() => {
-                this.formatChartData(data)
-            })
-        })
+        this.formatChartData(this.chartData)
     },
     methods: {
         formatChartData(data) {
