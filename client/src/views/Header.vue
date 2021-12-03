@@ -30,7 +30,7 @@
                         src="analytics"
                         iconClass="icon size-sm"
                     ></InlineSvg>
-                    <div class="ml-2">Analytics</div>
+                    <div class="ml-2">Dashboard</div>
                 </div>
                 <div v-if="activeTab == 'analytics'" class="tab-border"></div>
             </div>
@@ -51,7 +51,7 @@ export default {
         activeTab: 'search',
     }),
     created() {
-        if (this.$router.name == 'Analytics') {
+        if (this.$route.name == 'Analytics') {
             this.activeTab = 'analytics'
         }
     },

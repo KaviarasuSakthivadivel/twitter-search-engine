@@ -9,7 +9,7 @@
                 <el-button @click="removeFilter" round>Clear</el-button>
             </div>
         </div>
-        <div class="mt-5 overflow-y-scroll filter-height">
+        <div class="mt-5 overflow-y-scroll filter-height text-sm">
             <div>POI Name</div>
             <el-select
                 class="mt-5 w-full"
@@ -69,15 +69,15 @@
                 <el-option
                     v-for="(sent, index) in sentiments"
                     :key="index"
-                    :label="sent"
+                    :label="sentimentVsLabel[sent]"
                     :value="sent"
                 >
                 </el-option>
             </el-select>
             <div class="mt-5">Hashtags</div>
-            <el-input v-model="hashtags"></el-input>
+            <el-input class="mt-5" v-model="hashtags"></el-input>
             <div class="mt-5">Mentions</div>
-            <el-input v-model="mentions"></el-input>
+            <el-input class="mt-5" v-model="mentions"></el-input>
             <div class="mt-5">Created at date range</div>
             <el-date-picker
                 class="mt-5 w-full"
@@ -105,7 +105,12 @@
     </div>
 </template>
 <script>
-import { filterFields, arrayFields, poiList } from '@/helpers/constants'
+import {
+    filterFields,
+    arrayFields,
+    poiList,
+    sentimentVsLabel,
+} from '@/helpers/constants'
 export default {
     data: () => ({
         poiName: [],
@@ -128,6 +133,7 @@ export default {
         countries: ['USA', 'India', 'Mexico'],
         sentiments: ['positive', 'negative', 'neutral'],
         timestamp: null,
+        sentimentVsLabel,
     }),
     created() {
         this.initFilterFields()

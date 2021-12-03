@@ -11,6 +11,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import _ from 'lodash'
 import axios from './helpers/axios'
 import Charts from './components/Charts'
+import moment from 'moment'
 
 Vue.config.productionTip = false
 
@@ -26,3 +27,4 @@ Object.defineProperty(Vue.prototype, '$_', { value: _ })
 Object.defineProperty(Vue.prototype, '$axios', { value: axios })
 
 Vue.component('TwCharts', Charts)
+Vue.prototype.moment = moment

@@ -15,19 +15,13 @@
                 v-if="totalDocs && timeTaken"
                 class="mt-3 flex items-center justify-center fetched-tweet-text"
             >
-                {{ `About ${totalDocs} tweets in ${timeTaken}` }}
+                {{ `Fetched ${totalDocs} tweets in ${timeTaken}` }}
             </div>
             <div class="flex flex-col p-5">
                 <div
                     v-for="(tweet, index) in tweetsList"
                     :key="`tw-card-${index}`"
-                    :class="[
-                        'results-card',
-                        index != 0 && 'mt-5',
-                        tweet.sentiment == 'neutral' && 'tw-border-grey',
-                        tweet.sentiment == 'negative' && 'tw-border-red',
-                        tweet.sentiment == 'positive' && 'tw-border-green',
-                    ]"
+                    :class="['results-card', index != 0 && 'mt-5']"
                 >
                     <div
                         @click="openTwitterProfile(tweet.poi_name)"
@@ -36,20 +30,53 @@
                         <el-avatar
                             size="small"
                             icon="el-icon-user-solid"
+                            :src="tweet.profile_url"
                         ></el-avatar>
                         <div class="ml-3 tw-id-name">
-                            {{ $_.upperFirst(tweet.poi_name) || 'Unknown' }}
+                            {{ tweet.profile_name || 'Unknown' }}
                         </div>
 
                         <InlineSvg
+                            v-if="tweet.verified"
                             src="verified"
                             iconClass="icon size-sm ml-2px svg-color-blue"
-                        ></InlineSvg>
+                        />
                         <div class="ml-4px tw-handle-name">
-                            {{ `@${tweet.poi_name}` || '@unknown' }}
+                            {{ `@${tweet.username}` || '@unknown' }}
+                        </div>
+                        <div class="tw-dot plr-4px">·</div>
+                        <div class="tw-handle-name">
+                            {{ moment(tweet.tweet_date).format('DD MMM YY') }}
                         </div>
                     </div>
                     <div class="mt-2" v-html="tweet.highlightedText"></div>
+                    <div class="mt-5 flex justify-between w-5/12 items-center">
+                        <el-tag
+                            :type="getTagType(tweet.sentiment)"
+                            effect="plain"
+                            >{{
+                                sentimentVsLabel[tweet.sentiment] || 'Neutral'
+                            }}</el-tag
+                        >
+                        <div class="flex items-center tw-grey1">
+                            <InlineSvg
+                                src="reply"
+                                iconClass="icon size-sm mr-5px"
+                            />{{ tweet.reply_count || '0' }}
+                        </div>
+                        <div class="flex items-center tw-grey1">
+                            <InlineSvg
+                                src="retweets"
+                                iconClass="icon size-sm mr-5px"
+                            />{{ tweet.retweet_count || '0' }}
+                        </div>
+                        <div class="flex items-center tw-grey1">
+                            <InlineSvg
+                                src="likes"
+                                iconClass="icon size-sm mr-5px"
+                            />{{ tweet.like_count || '0' }}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex justify-center w-full mt-5">
@@ -77,13 +104,15 @@
     </el-tabs>
 </template>
 <script>
-import { filterFields, arrayFields } from '@/helpers/constants'
+import {
+    filterFields,
+    arrayFields,
+    sentimentVsLabel,
+} from '@/helpers/constants'
 import QueryAnalytics from './QueryAnalytics.vue'
-import InlineSvg from '../../components/InlineSvg.vue'
 export default {
     components: {
         QueryAnalytics,
-        InlineSvg,
     },
     data: () => ({
         tweetsList: [],
@@ -93,6 +122,7 @@ export default {
         chartData: [],
         currentTab: 'tweet',
         timeTaken: null,
+        sentimentVsLabel,
     }),
     created() {
         this.fetchResults()
@@ -190,6 +220,15 @@ export default {
         },
         openTwitterProfile(profile) {
             window.open(`http://twitter.com/${profile}`)
+        },
+        getTagType(sentiment) {
+            if (sentiment == 'positive') {
+                return 'success'
+            } else if (sentiment == 'neutral') {
+                return 'info'
+            } else if (sentiment == 'negative') {
+                return 'danger'
+            }
         },
     },
 }

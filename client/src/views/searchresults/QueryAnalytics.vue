@@ -45,20 +45,16 @@
             </template>
         </el-skeleton>
     </div>
-    <div v-else class="overflow-y-scroll p-5 flex">
+    <div v-else class="overflow-y-scroll p-5 grid gap-4 grid-cols-3 h-full">
         <TwCharts
             :chartName="'langChart'"
             :chartData="poiChartData"
-            :height="300"
-            :width="300"
-            class="q-analytics-container"
+            class="q-analytics-container height400px col-span-3"
         ></TwCharts>
         <TwCharts
             :chartName="'poiChart'"
             :chartData="langChartData"
-            :height="300"
-            :width="300"
-            class="ml-5 q-analytics-container"
+            class="q-analytics-container col-span-1 height300px"
         ></TwCharts>
     </div>
 </template>
@@ -89,7 +85,7 @@ const poiChartDataOptions = {
                 enabled: false,
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %',
             },
-            showInLegend: false,
+            showInLegend: true,
         },
     },
     series: [

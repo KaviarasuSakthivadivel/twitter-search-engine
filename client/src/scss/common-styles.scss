@@ -145,6 +145,7 @@
             .tw-id-name {
                 color: rgba(0, 0, 0, 1);
                 font-weight: 700;
+                font-size: 14px;
             }
             .tw-name-parent {
                 &:hover {
@@ -152,10 +153,17 @@
                         text-decoration: underline;
                     }
                 }
+                .tw-dot {
+                    color: rgb(83, 100, 113);
+                    font-weight: 400;
+                    font-size: 15px;
+                }
             }
+
             .tw-handle-name {
                 color: rgb(83, 100, 113);
                 font-weight: 400;
+                font-size: 14px;
             }
             &.tw-border-red {
                 border-top: 2px solid rgb(244, 91, 91);
@@ -216,11 +224,14 @@
         background-color: #e5e5e5;
     }
     .q-analytics-container {
-        // box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.06),
-        //     0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
-        // border-radius: 28px;
         box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
         border-radius: 14px;
+    }
+    .height400px {
+        height: 400px;
+    }
+    .height300px {
+        height: 300px;
     }
 }
 .bg-grey {
@@ -231,12 +242,16 @@
     background-color: #f5f8fa;
     padding: 20px;
     height: calc(100vh - 50px);
-    .tw-a-container {
+    .tw-container {
         background: #ffffff;
         box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
         border-radius: 14px;
+    }
+    .dashboard-card-full {
         height: 300px;
-        width: 300px;
+    }
+    .card-type2 {
+        height: 300px;
     }
 }
 
@@ -289,9 +304,36 @@ svg.icon {
     display: none;
 }
 
+.tw-red1 {
+    color: rgb(249, 24, 128);
+}
+.tw-blue1 {
+    color: rgb(249, 24, 128);
+}
+.tw-green1 {
+    color: rgb(249, 24, 128);
+}
+.tw-grey1 {
+    color: rgb(83, 100, 113);
+}
+
 .ml-2px {
     margin-left: 2px;
 }
+.mr-5px {
+    margin-right: 10px;
+}
 .ml-4px {
     margin-left: 4px;
+}
+.plr-4px {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.red-circle {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: rgb(249, 24, 128);
 }

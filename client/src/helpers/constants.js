@@ -66,3 +66,9 @@ export const poiList = [
     'GovKathyHochul',
     'MIB_India',
 ]
+
+export const sentimentVsLabel = {
+    positive: 'Positive',
+    negative: 'Negative',
+    neutral: 'Neutral',
+}

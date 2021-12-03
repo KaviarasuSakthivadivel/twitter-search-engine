@@ -1,5 +1,5 @@
 <template>
-    <div :id="chartName" :style="`width:${width}px; height:${height}px;`"></div>
+    <div :id="chartName"></div>
 </template>
 <script>
 import Highcharts from 'highcharts'
