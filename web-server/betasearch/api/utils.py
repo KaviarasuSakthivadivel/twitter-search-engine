@@ -59,7 +59,7 @@ def get_tweet_insights(core, aws_url, total_docs):
     pages = int(total_docs / count)
     rows = count
     for i in range(pages):
-        print(i)
+        #print(i)
         start = i * count
         response = requests.get('http://' + aws_url + ':8983/solr/' + core + '/query?q=*&start='
                                 + str(start) + '&rows=' + str(rows))
@@ -69,13 +69,12 @@ def get_tweet_insights(core, aws_url, total_docs):
         tweet_ids=[]
         for doc in docs:
             if 'profile_url' not in doc:
+                print(i)
                 del doc['_version_']
                 tweet_ids.append(doc['id'])
-                
-        ids = ','.join(tweet_ids)
-        
-        processed_docs=update_doc_with_metrics(ids,docs)
-        
+        if len(tweet_ids)>0:
+            ids = ','.join(tweet_ids)
+            processed_docs=update_doc_with_metrics(ids,docs)
 
         if len(processed_docs) > 0:
             index_data(processed_docs)
