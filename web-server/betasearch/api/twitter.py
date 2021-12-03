@@ -48,20 +48,43 @@ class Twitter:
                                        user_fields=user_fieldslist).flatten(limit=reply_count)
         return all_replies
 
-    def get_metrics(self, tweet_id):
+    def get_metrics(self, tweet_ids):
         tweet_fieldsList = ["id", "public_metrics"]
         user_fieldsList = ["verified", "profile_image_url", "name", "username"]
-        all_metrics = self.TwitterClient.get_tweet(tweet_id, tweet_fields=tweet_fieldsList, expansions="author_id",
+        all_metrics = self.TwitterClient.get_tweets(tweet_ids, tweet_fields=tweet_fieldsList, expansions="author_id",
                                                    user_fields=user_fieldsList)
-        tweet = all_metrics.data
+        tweet_metrics = all_metrics.data
+        includes= all_metrics.includes
+        if  bool(includes):
+            user_metrics=includes["users"]
+        
+        metrics={}
+        for i in range(len(tweet_metrics)):
+            tweet_id=str(tweet_metrics[i]["id"])
+            metrics[tweet_id]={}
+            metrics[tweet_id]["retweet_count"]=tweet_metrics[i]["public_metrics"]["retweet_count"] if tweet_metrics[i]["public_metrics"]["retweet_count"] is not None else 0
+            metrics[tweet_id]["reply_count"]=tweet_metrics[i]["public_metrics"]["reply_count"] if tweet_metrics[i]["public_metrics"]["reply_count"] is not None else 0
+            metrics[tweet_id]["like_count"]=tweet_metrics[i]["public_metrics"]["like_count"] if tweet_metrics[i]["public_metrics"]["like_count"] is not None else 0
+            metrics[tweet_id]["quote_count"]=tweet_metrics[i]["public_metrics"]["quote_count"]if tweet_metrics[i]["public_metrics"]["quote_count"] is not None else 0
+            
+            if i<len(user_metrics):
+                metrics[tweet_id]["username"]=user_metrics[i]["username"]
+                metrics[tweet_id]["profile_name"]=user_metrics[i]["name"]
+                metrics[tweet_id]["profile_url"]=user_metrics[i]["profile_image_url"]
+                metrics[tweet_id]["verified"]=user_metrics[i]["verified"]
+            
 
-        includes = all_metrics.includes
-        if not bool(includes):
-            includes = None
-        return tweet, includes
+
+            
+
+
+        
+        # if not bool(includes):
+        #     includes = None
+        return metrics
 
 
 if __name__ == '__main__':
     t = Twitter()
-    print(t.get_metrics("1437216869597921283")[0])
-    print(t.get_metrics("1437216869597921283")[1]['users'][0].name)
+    print(t.get_metrics("1437216869597921283,1466240523740401664,1437214611762151426,1437213484156997634,1437206898378350592"))
+    

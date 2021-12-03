@@ -55,7 +55,7 @@ def do_sentiment_analysis(core, aws_url, total_docs):
 
 
 def get_tweet_insights(core, aws_url, total_docs):
-    count = 10
+    count = 100
     pages = int(total_docs / count)
     rows = count
     for i in range(pages):
@@ -66,37 +66,39 @@ def get_tweet_insights(core, aws_url, total_docs):
         json_response = response.json()
         docs = json_response['response']['docs']
         processed_docs = []
+        tweet_ids=[]
         for doc in docs:
             if 'profile_url' not in doc:
                 del doc['_version_']
-                doc = update_doc_with_metrics(doc)
-                processed_docs.append(doc)
+                tweet_ids.append(doc['id'])
+                
+        ids = ','.join(tweet_ids)
+        
+        processed_docs=update_doc_with_metrics(ids,docs)
+        
+
         if len(processed_docs) > 0:
             index_data(processed_docs)
 
 
-def update_doc_with_metrics(doc):
-    tweet_id = doc['id']
-    tweet = t.get_metrics(tweet_id)
-    tweet_metrics = tweet[0]
-    tweet_includes = tweet[1]
-    if tweet_metrics is not None:
-        public_metrics = tweet_metrics.public_metrics
-        doc['reply_count'] = public_metrics['reply_count']
-        doc['retweet_count'] = public_metrics['retweet_count']
-        doc['like_count'] = public_metrics['like_count']
-        doc['quote_count'] = public_metrics['quote_count']
-    else:
-        doc['reply_count'] = 0
-        doc['retweet_count'] = 0
-        doc['like_count'] = 0
-        doc['quote_count'] = 0
-    if tweet_includes is not None:
-        doc['username'] = tweet_includes['users'][0].username
-        doc['profile_name'] = tweet_includes['users'][0].name
-        doc['profile_url'] = tweet_includes['users'][0].profile_image_url
-        doc['verified'] = tweet_includes['users'][0].verified
-    return doc
+def update_doc_with_metrics(ids,docs):
+    
+    tweet_metrics = t.get_metrics(ids)
+    for doc in docs:
+        if doc['id'] in tweet_metrics:
+            tweet_id=doc["id"]
+            doc['reply_count'] = tweet_metrics[tweet_id]['reply_count']
+            doc['retweet_count'] = tweet_metrics[tweet_id]['retweet_count']
+            doc['like_count'] = tweet_metrics[tweet_id]['like_count']
+            doc['quote_count'] = tweet_metrics[tweet_id]['quote_count']
+            doc['username'] = tweet_metrics[tweet_id]["username"]
+            doc['profile_name'] = tweet_metrics[tweet_id]["profile_name"]
+            doc['profile_url'] = tweet_metrics[tweet_id]["profile_url"]
+            doc['verified'] = tweet_metrics[tweet_id]["verified"]
+        
+
+    
+    return docs
 
 
 def index_data(docs):
