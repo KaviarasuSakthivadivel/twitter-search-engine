@@ -59,6 +59,8 @@ class Twitter:
             user_metrics=includes["users"]
         
         metrics={}
+        print(len(tweet_metrics))
+        print(len(user_metrics))
         for i in range(len(tweet_metrics)):
             tweet_id=str(tweet_metrics[i]["id"])
             metrics[tweet_id]={}
@@ -66,12 +68,24 @@ class Twitter:
             metrics[tweet_id]["reply_count"]=tweet_metrics[i]["public_metrics"]["reply_count"] if tweet_metrics[i]["public_metrics"]["reply_count"] is not None else 0
             metrics[tweet_id]["like_count"]=tweet_metrics[i]["public_metrics"]["like_count"] if tweet_metrics[i]["public_metrics"]["like_count"] is not None else 0
             metrics[tweet_id]["quote_count"]=tweet_metrics[i]["public_metrics"]["quote_count"]if tweet_metrics[i]["public_metrics"]["quote_count"] is not None else 0
-            
-            if i<len(user_metrics):
-                metrics[tweet_id]["username"]=user_metrics[i]["username"]
-                metrics[tweet_id]["profile_name"]=user_metrics[i]["name"]
-                metrics[tweet_id]["profile_url"]=user_metrics[i]["profile_image_url"]
-                metrics[tweet_id]["verified"]=user_metrics[i]["verified"]
+            user_id=(tweet_metrics[i]["author_id"])
+            user_idx=-1
+            for k, dic in enumerate(user_metrics):
+                if dic["id"]==user_id:
+                   user_idx=k
+                   break
+                
+        
+            if user_idx>=0:
+                metrics[tweet_id]["username"]=user_metrics[user_idx]["username"]
+                metrics[tweet_id]["profile_name"]=user_metrics[user_idx]["name"]
+                metrics[tweet_id]["profile_url"]=user_metrics[user_idx]["profile_image_url"]
+                metrics[tweet_id]["verified"]=user_metrics[user_idx]["verified"]
+            else:
+                metrics[tweet_id]["username"]=""
+                metrics[tweet_id]["profile_name"]=""
+                metrics[tweet_id]["profile_url"]=""
+                metrics[tweet_id]["verified"]=False
             
 
 
