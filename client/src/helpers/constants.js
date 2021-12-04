@@ -88,3 +88,5 @@ export const countryVsColor = {
     Mexico: 'rgb(215, 0, 38)',
     USA: 'rgb(0, 82, 180)',
 }
+
+export const langVsLabel = { en: 'English', es: 'Spanish', hi: 'Hindi' }

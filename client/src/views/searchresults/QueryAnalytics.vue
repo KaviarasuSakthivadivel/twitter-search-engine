@@ -80,7 +80,6 @@
     </div>
 </template>
 <script>
-const langVsLabel = { en: 'English', es: 'Spanish', hi: 'Hindi' }
 import {
     langChartData,
     poiChartData,
@@ -93,6 +92,7 @@ import {
     sentimentVsLabel,
     sentimentVsColor,
     countryVsColor,
+    langVsLabel,
 } from '@/helpers/constants'
 import moment from 'moment'
 export default {
