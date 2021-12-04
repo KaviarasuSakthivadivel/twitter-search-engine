@@ -151,6 +151,7 @@ def search(request):
                                 "poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
                                 "country": {"type": "terms", "field": "country", "limit": 10},
                                 "hashtags": {"type": "terms", "field": "hashtags", "limit": 30},
+                                "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
                                 "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 1000}}}
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()

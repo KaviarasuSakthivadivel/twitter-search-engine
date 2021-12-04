@@ -78,3 +78,8 @@ export const sentimentVsLabel = {
     negative: 'Negative',
     neutral: 'Neutral',
 }
+export const sentimentVsColor = {
+    positive: '#67c23a',
+    negative: '#f56c6c',
+    neutral: '#909399',
+}

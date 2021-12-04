@@ -47,105 +47,51 @@
     </div>
     <div v-else class="overflow-y-scroll p-5 grid gap-4 grid-cols-3 h-full">
         <TwCharts
-            :chartName="'langChart'"
+            :chartName="'poiChart'"
             :chartData="poiChartData"
             class="q-analytics-container height400px col-span-3"
         ></TwCharts>
         <TwCharts
-            :chartName="'poiChart'"
+            :chartName="'langChart'"
             :chartData="langChartData"
             class="q-analytics-container col-span-1 height300px"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'sentimentChart'"
+            :chartData="sentimentChartData"
+            class="q-analytics-container col-span-1 height300px"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'wordCloud'"
+            :chartData="wordCloudData"
+            class="q-analytics-container col-span-3 height500px"
         ></TwCharts>
     </div>
 </template>
 <script>
-const poiChartDataOptions = {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie',
-    },
-    title: {
-        text: 'POI stats',
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%',
-        },
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: false,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-            },
-            showInLegend: true,
-        },
-    },
-    series: [
-        {
-            name: 'POI',
-            colorByPoint: true,
-            data: [],
-        },
-    ],
-}
-const countryChartDataOptions = {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie',
-    },
-    title: {
-        text: 'Language wise stats',
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%',
-        },
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: false,
-            },
-            showInLegend: true,
-        },
-    },
-    series: [
-        {
-            name: 'Country',
-            colorByPoint: true,
-            data: [],
-        },
-    ],
-}
 const langVsLabel = { en: 'English', es: 'Spanish', hi: 'Hindi' }
+import {
+    langChartData,
+    poiChartData,
+    sentimentChartData,
+    wordCloudData,
+} from '@/helpers/queryChartData'
+import { sentimentVsLabel, sentimentVsColor } from '@/helpers/constants'
 export default {
     props: ['chartData'],
     data: () => ({
         loading: true,
-        poiChartData: poiChartDataOptions,
-        langChartData: countryChartDataOptions,
+        poiChartData,
+        langChartData,
+        sentimentChartData,
+        wordCloudData,
     }),
     created() {
         this.formatChartData(this.chartData)
     },
     methods: {
         formatChartData(data) {
-            if (data && data.poi_name) {
+            if (data?.poi_name) {
                 const poiBucketJSON = data.poi_name.buckets
                 let poiChartDataArr = []
                 poiBucketJSON.forEach((bucket) => {
@@ -153,7 +99,7 @@ export default {
                 })
                 this.poiChartData.series[0].data = poiChartDataArr
             }
-            if (data && data.tweet_lang) {
+            if (data?.tweet_lang) {
                 const tweetLangJSON = data.tweet_lang.buckets
                 let tweetLangDataArr = []
                 tweetLangJSON.forEach((bucket) => {
@@ -163,6 +109,29 @@ export default {
                     })
                 })
                 this.langChartData.series[0].data = tweetLangDataArr
+            }
+            if (data?.sentiment) {
+                let sentiments = data.sentiment.buckets || []
+                let sentimentDataArr = []
+                sentiments.forEach((bucket) => {
+                    sentimentDataArr.push({
+                        name: sentimentVsLabel[bucket.val],
+                        y: bucket.count,
+                        color: sentimentVsColor[bucket.val],
+                    })
+                })
+                this.sentimentChartData.series[0].data = sentimentDataArr
+            }
+            if (data?.hashtags) {
+                let hastags = data.hashtags.buckets || []
+                let hashtagDataArr = []
+                hastags.forEach((bucket) => {
+                    hashtagDataArr.push({
+                        name: bucket.val,
+                        weight: bucket.count,
+                    })
+                })
+                this.wordCloudData.series[0].data = hashtagDataArr
             }
             this.loading = false
         },

@@ -3,6 +3,9 @@
 </template>
 <script>
 import Highcharts from 'highcharts'
+require('highcharts/highcharts-more')(Highcharts)
+require('highcharts/modules/wordcloud')(Highcharts)
+
 export default {
     props: {
         chartName: { required: true },

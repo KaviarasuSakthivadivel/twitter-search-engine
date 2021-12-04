@@ -133,7 +133,6 @@ export default {
         ],
         countries: ['USA', 'India', 'Mexico'],
         sentiments: ['positive', 'negative', 'neutral'],
-        timestamp: null,
         sentimentVsLabel,
     }),
     created() {
