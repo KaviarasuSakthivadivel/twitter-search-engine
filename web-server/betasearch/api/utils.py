@@ -2,7 +2,7 @@ import requests
 import sys
 
 from indexer import Indexer
-from sentiment_analysis import analyse_sentiment_deep_ai
+from sentiment_analysis import analyze_sentiment
 from twitter import Twitter
 import urllib.request
 
@@ -70,9 +70,9 @@ def do_sentiment_analysis(core, aws_url, total_docs):
         processed_docs = []
         for doc in docs:
             del doc['_version_']
-            if 'sentiment' not in doc :
+            if 'sentiment' not in doc and doc['tweet_lang'] != 'hi':
                 # sentiment, score, magnitude = analyze_sentiment(doc['tweet_text'], doc['tweet_lang'])
-                sentiment, score, magnitude = analyse_sentiment_deep_ai(doc['tweet_text'])
+                sentiment, score, magnitude = analyze_sentiment(doc['tweet_text'])
                 print(sentiment)
                 doc['sentiment'] = sentiment
                 doc['doc_score'] = score
