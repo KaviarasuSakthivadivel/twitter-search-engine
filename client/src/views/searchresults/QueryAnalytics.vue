@@ -52,18 +52,29 @@
             class="q-analytics-container height400px col-span-3"
         ></TwCharts>
         <TwCharts
+            :chartName="'sentimentChart'"
+            :chartData="sentimentChartData"
+            class="q-analytics-container col-span-1 height300px"
+        ></TwCharts>
+
+        <TwCharts
             :chartName="'langChart'"
             :chartData="langChartData"
             class="q-analytics-container col-span-1 height300px"
         ></TwCharts>
         <TwCharts
-            :chartName="'sentimentChart'"
-            :chartData="sentimentChartData"
+            :chartName="'countryChartData'"
+            :chartData="countryChartData"
             class="q-analytics-container col-span-1 height300px"
         ></TwCharts>
         <TwCharts
             :chartName="'wordCloud'"
             :chartData="wordCloudData"
+            class="q-analytics-container col-span-3 height500px"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'timeSeries'"
+            :chartData="timeSeriesData"
             class="q-analytics-container col-span-3 height500px"
         ></TwCharts>
     </div>
@@ -75,8 +86,15 @@ import {
     poiChartData,
     sentimentChartData,
     wordCloudData,
+    countryChartData,
+    timeSeriesData,
 } from '@/helpers/queryChartData'
-import { sentimentVsLabel, sentimentVsColor } from '@/helpers/constants'
+import {
+    sentimentVsLabel,
+    sentimentVsColor,
+    countryVsColor,
+} from '@/helpers/constants'
+import moment from 'moment'
 export default {
     props: ['chartData'],
     data: () => ({
@@ -85,6 +103,8 @@ export default {
         langChartData,
         sentimentChartData,
         wordCloudData,
+        countryChartData,
+        timeSeriesData,
     }),
     created() {
         this.formatChartData(this.chartData)
@@ -110,6 +130,18 @@ export default {
                 })
                 this.langChartData.series[0].data = tweetLangDataArr
             }
+            if (data?.country) {
+                const tweetcountryJSON = data.country.buckets
+                let tweetcountryDataArr = []
+                tweetcountryJSON.forEach((bucket) => {
+                    tweetcountryDataArr.push({
+                        name: bucket.val,
+                        y: bucket.count,
+                        color: countryVsColor[bucket.val],
+                    })
+                })
+                this.countryChartData.series[0].data = tweetcountryDataArr
+            }
             if (data?.sentiment) {
                 let sentiments = data.sentiment.buckets || []
                 let sentimentDataArr = []
@@ -123,15 +155,32 @@ export default {
                 this.sentimentChartData.series[0].data = sentimentDataArr
             }
             if (data?.hashtags) {
-                let hastags = data.hashtags.buckets || []
+                let hashtags = data.hashtags.buckets || []
                 let hashtagDataArr = []
-                hastags.forEach((bucket) => {
+                hashtags.forEach((bucket) => {
                     hashtagDataArr.push({
                         name: bucket.val,
                         weight: bucket.count,
                     })
                 })
                 this.wordCloudData.series[0].data = hashtagDataArr
+            }
+            if (data?.tweet_date) {
+                let tweetDates = data.tweet_date.buckets || []
+                let tweetDateDataArr = []
+                tweetDates.forEach((bucket) => {
+                    if (moment(bucket.val).valueOf() > 1630468800000) {
+                        tweetDateDataArr.push([
+                            moment(bucket.val).valueOf(),
+                            bucket.count,
+                        ])
+                    }
+                })
+                this.timeSeriesData.series[0].data = tweetDateDataArr
+                    .sort((a, b) => {
+                        return b[0] - a[0]
+                    })
+                    .reverse()
             }
             this.loading = false
         },

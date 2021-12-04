@@ -141,7 +141,6 @@ export default {
     methods: {
         initFilterFields() {
             filterFields.forEach((field) => {
-                console.log(this.$route.query[field])
                 if (
                     this.$_.isArray(this[field]) &&
                     !this.$_.isEmpty(this.$route.query[field])

@@ -24,7 +24,17 @@
                     :class="['results-card', index != 0 && 'mt-5']"
                 >
                     <div
-                        @click="openTwitterProfile(tweet.poi_name)"
+                        @click="
+                            openTweet({ profile: tweet.username, id: tweet.id })
+                        "
+                    >
+                        <InlineSvg
+                            src="new-tab"
+                            iconClass="icon size-m new-tab-icon svg-color-blue"
+                        />
+                    </div>
+                    <div
+                        @click="openTwitterProfile(tweet.profile_name)"
                         class="flex flex-row items-center tw-name-parent"
                     >
                         <el-avatar
@@ -134,6 +144,7 @@ export default {
     },
     watch: {
         routeQueries() {
+            this.pageNo = 1
             this.fetchResults()
         },
     },
@@ -220,6 +231,9 @@ export default {
         },
         openTwitterProfile(profile) {
             window.open(`http://twitter.com/${profile}`)
+        },
+        openTweet({ profile, id }) {
+            window.open(`http://twitter.com/${profile}/status/${id}`)
         },
         getTagType(sentiment) {
             if (sentiment == 'positive') {
