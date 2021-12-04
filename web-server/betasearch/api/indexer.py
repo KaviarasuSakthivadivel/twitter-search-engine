@@ -219,6 +219,52 @@ class Indexer:
         }
         print(requests.post(self.core_url + "/schema", json=request_data).json())
 
+    def add_metrics_fields(self):
+        request_data = {
+            "add-field": [
+                {
+                    "name": "replies_count",
+                    "type": "pint",
+                    "multiValued": False
+                },
+                {
+                    "name": "likes_count",
+                    "type": "pint",
+                    "multiValued": False
+                },
+                {
+                    "name": "retweets_count",
+                    "type": "pint",
+                    "multiValued": False
+                },
+                { "name": "quotes_count",
+                    "type": "pint",
+                    "multiValued": False
+
+                }
+            ]
+        }
+        print(requests.post(self.core_url + "/schema", json=request_data).json())
+    def delete_metric_fields(self):
+        request_data = {
+            "delete-field": [
+                {
+                    "name": "reply_count",
+                },
+                {
+                    "name": "like_count",
+                },
+                {
+                    "name": "retweet_count",
+                },
+                {
+                    "name":"quote_count"
+                }
+            ]
+        }
+
+        print(requests.post(self.core_url + "/schema", json=request_data).json())
+
     def delete_sentiment_fields(self):
         request_data = {
             "delete-field": [
@@ -353,5 +399,7 @@ if __name__ == "__main__":
     #     i.do_initial_setup()
     #     i.delete_fields()
     i = Indexer()
-    i.delete_sentiment_fields()
-    i.add_sentiment_fields()
+    #i.delete_sentiment_fields()
+    #i.add_sentiment_fields()
+    #i.add_metrics_fields()
+    i.delete_metric_fields()

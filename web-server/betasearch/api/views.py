@@ -138,7 +138,7 @@ def search(request):
 
         # minimum replies filter
         if replyCount != 0:
-            f_query = f_query + " AND " + "reply_count:" + \
+            f_query = f_query + " AND " + "replies_count:" + \
                 "[" + str(replyCount) + " TO *" + "]"
 
         # hashtags filter
@@ -186,17 +186,50 @@ def get_replies(request, tweet_id):
 @api_view(['GET', 'POST'])
 def get_dashboard_data(request):
     if request.method == 'GET':
-        query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=*'
+    #code needs to be refactored to handle different charts based on the query parameter -chart    
+        chart="vaccinehesitant"
+        if chart=="all":
+            query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=*'
+            
+            # Facet query formulations
+            facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
+                                    "poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
+                                    "country": {"type": "terms", "field": "country", "limit": 10},
+                                    "hashtags": {"type": "terms", "field": "hashtags", "limit": 30},
+                                    "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
+                                    "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 1000}}}
+            response = requests.get(query, json=facet_json)
+            json_response = response.json()
+            return JsonResponse(json_response)
+            
         
-        # Facet query formulations
-        facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
-                                "poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
-                                "country": {"type": "terms", "field": "country", "limit": 10},
-                                "hashtags": {"type": "terms", "field": "hashtags", "limit": 30},
-                                "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
-                                "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 1000}}}
-        response = requests.get(query, json=facet_json)
-        json_response = response.json()
-        return JsonResponse(json_response)
+        #time series of sentiments
+        elif chart=="timeVsSentiment":
+            query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=*&facet=true&facet.pivot=tweet_date,sentiment'
+            response = requests.get(query)
+            json_response = response.json()
+            return JsonResponse(json_response)
+        elif chart=="vaccinehesitant":
+            vaccines=["covishield","covaxin","pfizer","moderna","johnson and johnson"]
+            buckets=[]
+            for v in vaccines:
+                result={}
+                q="tweet_text:"+v
+                query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q='+q+'&facet=true&fact.field=sentiment&facet.query=sentiment:negative'
+                response = requests.get(query)
+                json_response = response.json()
+                result["val"]=v
+                result["hestitant_score"]=json_response["facet_counts"]["facet_queries"]["sentiment:negative"]
+                buckets.append(result)
+            json_response=buckets
+            
+            return JsonResponse(json_response,safe=False)
+        
+            
+
+        
+        
+
+
         
 

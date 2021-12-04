@@ -4,6 +4,7 @@ import sys
 from indexer import Indexer
 from sentiment_analysis import analyse_sentiment_deep_ai
 from twitter import Twitter
+import urllib.request
 
 
 def download_data(core, aws_url, total_docs):
@@ -25,7 +26,34 @@ def download_data(core, aws_url, total_docs):
         index_data(processed_docs)
         # with open('data/' + str(i) + '.json', 'w') as outfile:
         #     json.dump(docs, outfile)
-
+def populate_metrics_data(core, aws_url, total_docs):
+    count = 1000
+    pages = int(total_docs / count)
+    rows = count
+    for i in range(pages):
+        print(i)
+        start = i * count
+        query="-replies_count:[* TO *]"
+        q = urllib.parse.quote(query, encoding="UTF-8")
+        response = requests.get('http://' + aws_url + ':8983/solr/' + core + '/query?q='+q+'&start='
+                                + str(start) + '&rows=' + str(rows))
+        json_response = response.json()
+        # print(json_response)
+        docs = json_response['response']['docs']
+        processed_docs = []
+        for doc in docs:
+            del doc['_version_']
+            print("test")
+        
+            if 'reply_count' in doc:
+                doc['replies_count']=doc['reply_count']
+                doc['retweets_count']=doc['retweet_count']
+                doc['quotes_count']=doc['quote_count']
+                doc['likes_count']=doc['like_count']
+                processed_docs.append(doc)
+        if len(processed_docs) > 0:
+            index_data(processed_docs)
+        
 
 def do_sentiment_analysis(core, aws_url, total_docs):
     count = 1000
@@ -68,9 +96,13 @@ def get_tweet_insights(core, aws_url, total_docs):
         processed_docs = []
         tweet_ids=[]
         for doc in docs:
-            if 'profile_url' not in doc:
+            if 'replies_count' in doc:
                 print(i)
                 del doc['_version_']
+                del doc['reply_count']
+                del doc['like_count']
+                del doc['retweet_count']
+                del doc['quote_count']
                 tweet_ids.append(doc['id'])
         if len(tweet_ids)>0:
             ids = ','.join(tweet_ids)
@@ -83,21 +115,24 @@ def get_tweet_insights(core, aws_url, total_docs):
 def update_doc_with_metrics(ids,docs):
     
     tweet_metrics = t.get_metrics(ids)
-    for doc in docs:
-        if doc['id'] in tweet_metrics:
-            tweet_id=doc["id"]
-            doc['reply_count'] = tweet_metrics[tweet_id]['reply_count']
-            doc['retweet_count'] = tweet_metrics[tweet_id]['retweet_count']
-            doc['like_count'] = tweet_metrics[tweet_id]['like_count']
-            doc['quote_count'] = tweet_metrics[tweet_id]['quote_count']
-            doc['username'] = tweet_metrics[tweet_id]["username"]
-            doc['profile_name'] = tweet_metrics[tweet_id]["profile_name"]
-            doc['profile_url'] = tweet_metrics[tweet_id]["profile_url"]
-            doc['verified'] = tweet_metrics[tweet_id]["verified"]
+    if len(tweet_metrics)>0:
+        for doc in docs:
+            if doc['id'] in tweet_metrics:
+                tweet_id=doc["id"]
+                # doc['reply_count'] = tweet_metrics[tweet_id]['reply_count']
+                # doc['retweet_count'] = tweet_metrics[tweet_id]['retweet_count']
+                doc['likes_count'] = tweet_metrics[tweet_id]['like_count']
+                # doc['quote_count'] = tweet_metrics[tweet_id]['quote_count']
+                # doc['username'] = tweet_metrics[tweet_id]["username"]
+                # doc['profile_name'] = tweet_metrics[tweet_id]["profile_name"]
+                # doc['profile_url'] = tweet_metrics[tweet_id]["profile_url"]
+                # doc['verified'] = tweet_metrics[tweet_id]["verified"]
         
 
     
-    return docs
+        return docs
+    else:
+        return []
 
 
 def index_data(docs):
@@ -125,4 +160,8 @@ if __name__ == '__main__':
         do_sentiment_analysis(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=400000)  # Kavi
     else:
         print("coming in")
-        get_tweet_insights(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=394000)  # entire corpus
+        get_tweet_insights(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000)  
+    # else:
+    #     print("updating the metrics fileds")
+    #     populate_metrics_data(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000) #entire corpus to populate replies_count,retweets_count,quotes_count
+
