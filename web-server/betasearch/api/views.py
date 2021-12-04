@@ -66,6 +66,7 @@ def search(request):
 
         if request.data.get('hashtags', None) is not None:
             hashtags = str(request.data['hashtags'])
+
         f_query = None
         if query is None:
             query = '*'
@@ -113,6 +114,7 @@ def search(request):
 
         # mentions filter
         if mentions is not None:
+            mentions = mentions.replace("@", "")
             f_query = f_query + " AND " + "mentions:" + "(" + mentions + ")"
 
         # show only replies filter
@@ -134,7 +136,7 @@ def search(request):
 
         # hashtags filter
         if hashtags is not None:
-            hashtags.replace("#", "")
+            hashtags = hashtags.replace("#", "")
             f_query = f_query + " AND " + "hashtags:" + "(" + hashtags + ")"
 
         # hit Solr and get the docs with pagination for each start and row combination
