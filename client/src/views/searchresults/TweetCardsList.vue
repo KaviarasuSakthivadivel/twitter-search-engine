@@ -72,19 +72,19 @@
                             <InlineSvg
                                 src="reply"
                                 iconClass="icon size-sm mr-5px"
-                            />{{ tweet.reply_count || '0' }}
+                            />{{ tweet.replies_count || '0' }}
                         </div>
                         <div class="flex items-center tw-grey1">
                             <InlineSvg
                                 src="retweets"
                                 iconClass="icon size-sm mr-5px"
-                            />{{ tweet.retweet_count || '0' }}
+                            />{{ tweet.retweets_count || '0' }}
                         </div>
                         <div class="flex items-center tw-grey1">
                             <InlineSvg
                                 src="likes"
                                 iconClass="icon size-sm mr-5px"
-                            />{{ tweet.like_count || '0' }}
+                            />{{ tweet.likes_count || '0' }}
                         </div>
                     </div>
                 </div>
