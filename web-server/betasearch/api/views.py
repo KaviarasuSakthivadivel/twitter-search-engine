@@ -47,7 +47,7 @@ def search(request):
             country = ' '.join(country)
 
         if request.data.get('timestamp', None) is not None:
-            timestamp = float(request.data['timestamp'])
+            timestamp = list(request.data['timestamp'])
 
         if request.data.get('mentions', None) is not None:
             mentions = str(request.data['mentions'])
@@ -105,12 +105,19 @@ def search(request):
         if country is not None:
             f_query = f_query + " AND " + "country:" + "(" + country + ")"
 
-        # Created Time
+        # Created Time and End time
         if timestamp is not None:
-            timestamp = datetime.date.fromtimestamp(timestamp)
-            tweetDate = timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
+            created_timestamp = float(timestamp[0])
+            end_timestamp = float(timestamp[1])
+            end_timestamp = end_timestamp + 86400000.0
+            created_timestamp = created_timestamp/1000
+            end_timestamp = end_timestamp/1000
+            created_timestamp = datetime.date.fromtimestamp(created_timestamp)
+            end_timestamp = datetime.date.fromtimestamp(end_timestamp)
+            created_tweetDate = created_timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
+            end_tweetDate = end_timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
             f_query = f_query + " AND " + "tweet_date:" + \
-                "[" + tweetDate + " TO NOW" + "]"
+                "[" + created_tweetDate + " TO " + end_tweetDate + "]"
 
         # mentions filter
         if mentions is not None:
@@ -127,12 +134,12 @@ def search(request):
 
         # show only tweets with replies filter
         if showTweetsWithLinks is True:
-            f_query = f_query + " AND " + "tweet_text:" + "(http)"
+            f_query = f_query + " AND " + "tweet_text:" + "(*http*)"
 
         # minimum replies filter
         if replyCount != 0:
             f_query = f_query + " AND " + "reply_count:" + \
-                "[" + str(replyCount) + "TO *" + "]"
+                "[" + str(replyCount) + " TO *" + "]"
 
         # hashtags filter
         if hashtags is not None:
@@ -147,6 +154,8 @@ def search(request):
         if f_query is not None:
             final_query += '&fq=' + \
                 urllib.parse.quote(f_query, encoding="UTF-8")
+
+        print("final_query : ",final_query)
 
         # Facet query formulations
         facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
