@@ -173,3 +173,21 @@ def get_replies(request, tweet_id):
     response = requests.get(reply_query)
     json_response = response.json()
     return JsonResponse(json_response)
+
+@api_view(['GET', 'POST'])
+def get_dashboard_data(request):
+    if request.method == 'GET':
+        query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=*'
+        
+        # Facet query formulations
+        facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
+                                "poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
+                                "country": {"type": "terms", "field": "country", "limit": 10},
+                                "hashtags": {"type": "terms", "field": "hashtags", "limit": 30},
+                                "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
+                                "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 1000}}}
+        response = requests.get(query, json=facet_json)
+        json_response = response.json()
+        return JsonResponse(json_response)
+        
+
