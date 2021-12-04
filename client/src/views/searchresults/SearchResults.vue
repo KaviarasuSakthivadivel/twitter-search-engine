@@ -39,7 +39,6 @@ export default {
     },
     components: {
         TweetCardsList,
-        // QueryAnalytics,
         Filters,
     },
     methods: {
