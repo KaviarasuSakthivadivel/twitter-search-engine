@@ -149,7 +149,8 @@ def search(request):
         # Facet query formulations
         facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
                                 "poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
-                                "country": {"type": "terms", "field": "country", "limit": 10}}}
+                                "country": {"type": "terms", "field": "country", "limit": 10},
+                                "hashtags": {"type": "terms", "field": "hashtags", "limit": 30}}}
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()
         json_response['time_taken'] = str(
