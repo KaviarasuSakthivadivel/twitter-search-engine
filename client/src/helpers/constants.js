@@ -5,13 +5,19 @@ export const filterFields = [
     'sentiment',
     'timestamp',
     'mentions',
-    'minimumReplies',
+    'replyCount',
     'showOnlyPoi',
     'showOnlyReplies',
     'showTweetsWithLinks',
     'hashtags',
 ]
-export const arrayFields = ['poiName', 'tweetLang', 'country', 'sentiment']
+export const arrayFields = [
+    'poiName',
+    'tweetLang',
+    'country',
+    'sentiment',
+    'timestamp',
+]
 
 export const poiList = [
     'lopezobrador_',

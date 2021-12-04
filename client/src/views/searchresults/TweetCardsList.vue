@@ -172,7 +172,7 @@ export default {
                     let hashtags_regex =
                         /(^|[^#\w])#(\w{1,100}|<em>\w{1,100}<\/em>)/g
                     let replaceHashTags =
-                        '<span style="color: rgb(29, 155, 240);">$1<a target="_blank" href="http://localhost:8080/searchresults?searchquery=#$2">#$2</a></span>'
+                        '<span style="color: rgb(29, 155, 240);">$1<a target="_blank" href="http://localhost:8080/searchresults?searchquery=$2">#$2</a></span>'
 
                     highlightedText = highlightedText.replace(
                         hashtags_regex,

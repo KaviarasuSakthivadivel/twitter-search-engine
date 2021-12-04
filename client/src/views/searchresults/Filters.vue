@@ -81,17 +81,18 @@
             <div class="mt-5">Created at date range</div>
             <el-date-picker
                 class="mt-5 w-full"
-                v-model="dateRange"
+                v-model="timestamp"
                 type="daterange"
                 range-separator="-"
                 start-placeholder="Start date"
                 end-placeholder="End date"
+                value-format="timestamp"
             >
             </el-date-picker>
             <div class="mt-5">Minimum replies</div>
             <el-input-number
                 class="mt-5"
-                v-model="minimumReplies"
+                v-model="replyCount"
                 :min="0"
             ></el-input-number>
             <div class="mt-5">Show only POI Tweets</div>
@@ -120,10 +121,10 @@ export default {
         showOnlyPoi: false,
         showOnlyReplies: false,
         showTweetsWithLinks: false,
-        dateRange: null,
+        timestamp: [],
         hashtags: '',
         mentions: '',
-        minimumReplies: null,
+        replyCount: null,
         poiList,
         languages: [
             { displayName: 'English', value: 'en' },
@@ -141,15 +142,24 @@ export default {
     methods: {
         initFilterFields() {
             filterFields.forEach((field) => {
-                if (!this.$_.isEmpty(this.$route.query[field])) {
-                    if (this.$_.isArray(this[field])) {
-                        this.$set(
-                            this,
-                            `${field}`,
-                            JSON.parse(
-                                decodeURIComponent(this.$route.query[field])
-                            )
-                        )
+                console.log(this.$route.query[field])
+                if (
+                    this.$_.isArray(this[field]) &&
+                    !this.$_.isEmpty(this.$route.query[field])
+                ) {
+                    this.$set(
+                        this,
+                        `${field}`,
+                        JSON.parse(decodeURIComponent(this.$route.query[field]))
+                    )
+                } else if (
+                    this.$route.query[field] &&
+                    this.$route.query[field] != ''
+                ) {
+                    if (
+                        decodeURIComponent(this.$route.query[field]) == 'true'
+                    ) {
+                        this[field] = true
                     } else {
                         this.$set(
                             this,
@@ -163,16 +173,17 @@ export default {
         applyFilters() {
             let query = { searchquery: this.$route.query.searchquery }
             filterFields.forEach((field) => {
-                if (!this.$_.isEmpty(this[field])) {
-                    if (this.$_.isArray(this[field])) {
-                        this.$set(
-                            query,
-                            field,
-                            encodeURIComponent(JSON.stringify(this[field]))
-                        )
-                    } else {
-                        this.$set(query, field, encodeURIComponent(this[field]))
-                    }
+                if (
+                    this.$_.isArray(this[field]) &&
+                    !this.$_.isEmpty(this[field])
+                ) {
+                    this.$set(
+                        query,
+                        field,
+                        encodeURIComponent(JSON.stringify(this[field]))
+                    )
+                } else if (this[field] && this[field] != '') {
+                    this.$set(query, field, encodeURIComponent(this[field]))
                 }
             })
             this.$router.replace({
