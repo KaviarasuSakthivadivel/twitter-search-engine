@@ -1,3 +1,4 @@
+import requests
 from google.cloud import language_v1
 
 
@@ -46,5 +47,40 @@ def analyze_sentiment(text_content, language="en"):
     return sentiment, round(response.document_sentiment.score, 2), round(response.document_sentiment.magnitude,2)
 
 
+def analyse_sentiment_deep_ai(text_content):
+    sentiment = "neutral"
+    score = 0.1
+    magnitude = 1.8
+    r = requests.post(
+        "https://api.deepai.org/api/sentiment-analysis",
+        data={
+            'text': text_content,
+        },
+        headers={'api-key': 'db0f06b5-1124-4136-be0f-a00f8b2a1288'}
+    )
+    json_response = r.json()
+    output = json_response['output']
+    neutral_count = 0
+    positive_count = 0
+    negative_count = 0
+    for o in output:
+        if o == "Neutral":
+            neutral_count += 1
+        elif o == "Positive":
+            positive_count += 1
+        else:
+            negative_count += 1
+    if positive_count >= negative_count and positive_count >= neutral_count:
+        score = 0.8
+        sentiment = 'positive'
+        magnitude = 1.3
+
+    elif negative_count >= positive_count and negative_count >= neutral_count:
+        score = -0.8
+        sentiment = 'negative'
+        magnitude = 1.3
+    return sentiment, score, magnitude
+
+
 if __name__ == '__main__':
-    analyze_sentiment("Hi")
+    analyse_sentiment_deep_ai("hello world")
