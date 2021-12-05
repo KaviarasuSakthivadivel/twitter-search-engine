@@ -1,8 +1,11 @@
 <template>
     <div class="tw-body">
         <div class="flex flex-row justify-center items-center">
-            <InlineSvg src="app-icon" iconClass="icon size-80 mr-5"></InlineSvg>
-            <div class="title-text">Elixir</div>
+            <InlineSvg
+                src="app-icon"
+                iconClass="icon size-120 mr-5"
+            ></InlineSvg>
+            <div class="title-text">Lamda</div>
         </div>
         <div class="flex flex-row mt-10 w-96">
             <el-input

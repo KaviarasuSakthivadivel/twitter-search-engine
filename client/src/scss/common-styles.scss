@@ -3,25 +3,7 @@
     flex-direction: column;
     height: 100vh;
     .tw-header {
-        background: linear-gradient(
-            67.52deg,
-            #6cace4 0%,
-            #6cace4 6.16%,
-            #6dade4 12.31%,
-            #6faee5 18.47%,
-            #72b0e5 24.63%,
-            #75b3e6 30.79%,
-            #79b6e7 36.94%,
-            #7db9e8 43.1%,
-            #82bdea 49.26%,
-            #86c0eb 55.42%,
-            #8ac3ec 61.57%,
-            #8dc6ed 67.73%,
-            #90c8ed 73.89%,
-            #92c9ee 80.05%,
-            #93caee 86.2%,
-            #93caee 92.36%
-        );
+        background: #19283a;
         height: 50px;
         display: flex;
         align-items: center;
@@ -29,31 +11,32 @@
         cursor: pointer;
         .tw-tabs {
             font-size: 14px;
-            color: rgba(0, 0, 0, 0.6);
             font-weight: bold;
+            color: #708092;
             .icon {
-                fill-opacity: 0.6;
+                .g {
+                    fill: #708092;
+                }
             }
             &.active {
-                color: #000;
+                color: #d7dde4;
                 font-weight: bold;
                 font-size: 14px;
                 .icon {
-                    fill-opacity: 1;
+                    fill: #d7dde4;
                 }
             }
             &:hover {
+                opacity: 0.5;
                 .icon {
-                    fill-opacity: 0.4;
+                    opacity: 0.5;
                 }
-                color: rgba(0, 0, 0, 0.4);
             }
         }
     }
     .title-text {
-        font-size: 80px;
-        font-weight: bold;
-        font-family: Comic Sans MS;
+        font-size: 90px;
+        font-weight: 400;
         &.size-18 {
             font-size: 18px;
         }
@@ -67,7 +50,7 @@
         flex-direction: column;
     }
     .tab-border {
-        background: #3300ff;
+        background: #d7dde4;
         border-radius: 3px 3px 0px 0px;
         height: 3px;
         width: 96px;
@@ -229,7 +212,7 @@
         height: calc(100vh - 200px);
     }
     .q-bg {
-        background-color: #e5e5e5;
+        background-color: #fff;
     }
     .q-analytics-container {
         box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
@@ -294,8 +277,8 @@ svg.icon {
         width: 80px;
     }
     &.size-100 {
-        height: 100%;
-        width: 100%;
+        height: 100px;
+        width: 100px;
     }
     &.size-120 {
         height: 120px;
@@ -303,6 +286,9 @@ svg.icon {
     }
     &.svg-color-blue {
         color: rgb(29, 155, 240);
+    }
+    &.svg-color-white {
+        color: #fff;
     }
 }
 .highcharts-credits {
@@ -341,4 +327,7 @@ svg.icon {
     width: 10px;
     border-radius: 50%;
     background-color: rgb(249, 24, 128);
+}
+.font-color1 {
+    color: #d7dde4;
 }

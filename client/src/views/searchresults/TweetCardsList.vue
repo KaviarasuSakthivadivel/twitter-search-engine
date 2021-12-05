@@ -56,7 +56,11 @@
                         </div>
                         <div class="tw-dot plr-4px">·</div>
                         <div class="tw-handle-name">
-                            {{ moment(tweet.tweet_date).format('DD MMM YY') }}
+                            {{
+                                moment(tweet.tweet_date)
+                                    .utc()
+                                    .format('DD MMM YY')
+                            }}
                         </div>
                     </div>
                     <div class="mt-2" v-html="tweet.highlightedText"></div>

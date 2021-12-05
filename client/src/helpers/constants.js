@@ -85,7 +85,7 @@ export const sentimentVsColor = {
 }
 export const countryVsColor = {
     India: 'rgb(201, 36, 39)',
-    Mexico: 'rgb(215, 0, 38)',
+    Mexico: 'rgb(128, 133, 233)',
     USA: 'rgb(0, 82, 180)',
 }
 
