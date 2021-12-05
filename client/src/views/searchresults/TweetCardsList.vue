@@ -112,9 +112,9 @@
         >
             <QueryAnalytics :chartData="chartData"></QueryAnalytics>
         </el-tab-pane>
-        <el-tab-pane label="News Articles" name="news"
-            >News Articles</el-tab-pane
-        >
+        <el-tab-pane label="News Articles" name="news" lazy class="tab-height2"
+            ><NewsArticles :query="routeQueries.searchquery"></NewsArticles
+        ></el-tab-pane>
     </el-tabs>
 </template>
 <script>
@@ -124,9 +124,11 @@ import {
     sentimentVsLabel,
 } from '@/helpers/constants'
 import QueryAnalytics from './QueryAnalytics.vue'
+import NewsArticles from './NewsArticles.vue'
 export default {
     components: {
         QueryAnalytics,
+        NewsArticles,
     },
     data: () => ({
         tweetsList: [],
