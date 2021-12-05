@@ -5,7 +5,7 @@
         :before-close="handleClose"
     >
         <div
-            @click.stop="openTwitterProfile(tweet.profile_name)"
+            @click.stop="openTwitterProfile(tweet.username)"
             class="flex flex-row items-center tw-name-parent"
         >
             <el-avatar

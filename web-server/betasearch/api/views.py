@@ -120,7 +120,7 @@ def search(request):
                 "%Y-%m-%dT%H:%M:%SZ")
             end_tweetDate = end_timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
             f_query = f_query + " AND " + "tweet_date:" + \
-                      "[" + created_tweetDate + " TO " + end_tweetDate + "]"
+                "[" + created_tweetDate + " TO " + end_tweetDate + "]"
 
         # mentions filter
         if mentions is not None:
@@ -142,7 +142,7 @@ def search(request):
         # minimum replies filter
         if replyCount != 0:
             f_query = f_query + " AND " + "replies_count:" + \
-                      "[" + str(replyCount) + " TO *" + "]"
+                "[" + str(replyCount) + " TO *" + "]"
 
         # hashtags filter
         if hashtags is not None:
@@ -164,7 +164,7 @@ def search(request):
                                 "country": {"type": "terms", "field": "country", "limit": 10},
                                 "hashtags": {"type": "terms", "field": "hashtags", "limit": 50},
                                 "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
-                                "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 500}}}
+                                "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 200}}}
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()
         json_response['time_taken'] = str(
@@ -180,8 +180,11 @@ def get_replies(request, tweet_id):
         q = urllib.parse.quote(q, encoding="UTF-8")
 
         reply_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-                      q + '&facet=true&facet.field=sentiment'
-        response = requests.get(reply_query)
+                      q
+        facet_json = {"facet": {
+            "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
+        }}
+        response = requests.get(reply_query, json=facet_json)
         json_response = response.json()
         return JsonResponse(json_response)
 
@@ -197,7 +200,7 @@ def get_dashboard_data(request):
                             "country": {"type": "terms", "field": "country", "limit": 10},
                             "hashtags": {"type": "terms", "field": "hashtags", "limit": 30},
                             "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
-                            "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 1000}}}
+                            "tweet_date": {"type": "terms", "field": "tweet_date", "limit": 200}}}
     response = requests.get(query, json=facet_json)
     json_response = response.json()
     return JsonResponse(json_response)
@@ -210,10 +213,12 @@ def get_chart_data(request):
     query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + \
             '/query?q=*&facet=true&facet.pivot=tweet_date,sentiment'
     response = requests.get(query)
-    chart_response["time_with_sentiment"] = response.json()["facet_counts"]["facet_pivot"]
+    chart_response["time_with_sentiment"] = response.json()[
+        "facet_counts"]["facet_pivot"]
 
     # sentiment for each vaccines
-    vaccines = ["covishield", "covaxin", "pfizer", "moderna", "johnson and johnson", "sputnik"]
+    vaccines = ["covishield", "covaxin", "pfizer",
+                "moderna", "johnson and johnson", "sputnik"]
     sentiment_buckets = []
     country_buckets = []
     for v in vaccines:
@@ -221,26 +226,29 @@ def get_chart_data(request):
         result_country = {}
         q = "tweet_text:" + v
         # sentiment for each vaccines
-        query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q + '&facet=true&facet.field=sentiment'
+        query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + \
+            '/query?q=' + q + '&facet=true&facet.field=sentiment'
         response = requests.get(query)
-        
-        result["val"]=v
-        result["sentiment_score"]= response.json()["facet_counts"]["facet_fields"]["sentiment"]
-        
-        
+
+        result["val"] = v
+        result["sentiment_score"] = response.json(
+        )["facet_counts"]["facet_fields"]["sentiment"]
+
         sentiment_buckets.append(result)
         # vaccine with countries
-        query_country = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q + '&facet=true&facet.field=country'
+        query_country = 'http://' + settings.AWS_URL + ':8983/solr/' + \
+            settings.CORE + '/query?q=' + q + '&facet=true&facet.field=country'
         response_country = requests.get(query_country)
         result_country["val"] = v
-        result_country["country"] = response_country.json()["facet_counts"]["facet_fields"]["country"]
+        result_country["country"] = response_country.json(
+        )["facet_counts"]["facet_fields"]["country"]
         country_buckets.append(result_country)
 
-    chart_response["vaccine_sentiment"]=sentiment_buckets
-    chart_response["vaccine_countries"]=country_buckets
-    
-    
-    return JsonResponse(chart_response,safe=False)
+    chart_response["vaccine_sentiment"] = sentiment_buckets
+    chart_response["vaccine_countries"] = country_buckets
+
+    return JsonResponse(chart_response, safe=False)
+
 
 @api_view(['GET', 'POST'])
 def get_news_article(request):

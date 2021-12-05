@@ -81,7 +81,7 @@
                 justify-around
             "
         >
-            <div class="title-text-1">102</div>
+            <div class="title-text-1">51</div>
             <div class="title-text-2">POI's</div>
         </div>
         <div
