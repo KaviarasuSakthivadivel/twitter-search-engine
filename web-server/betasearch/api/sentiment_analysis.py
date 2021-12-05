@@ -56,9 +56,10 @@ def analyse_sentiment_deep_ai(text_content):
         data={
             'text': text_content,
         },
-        headers={'api-key': 'db0f06b5-1124-4136-be0f-a00f8b2a1288'}
+        headers={'api-key': '05a645ab-93e7-49a9-82ec-4f31251ebbe8'}
     )
     json_response = r.json()
+    print(json_response)
     output = json_response['output']
     neutral_count = 0
     positive_count = 0

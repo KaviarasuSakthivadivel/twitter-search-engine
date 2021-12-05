@@ -1,10 +1,12 @@
-import requests
 import sys
+import urllib.request
+
+import requests
+from django.conf import settings
 
 from indexer import Indexer
 from sentiment_analysis import analyze_sentiment
 from twitter import Twitter
-import urllib.request
 
 
 def download_data(core, aws_url, total_docs):
@@ -26,6 +28,8 @@ def download_data(core, aws_url, total_docs):
         index_data(processed_docs)
         # with open('data/' + str(i) + '.json', 'w') as outfile:
         #     json.dump(docs, outfile)
+
+
 def populate_metrics_data(core, aws_url, total_docs):
     count = 1000
     pages = int(total_docs / count)
@@ -144,6 +148,59 @@ def index_data(docs):
     i.create_documents(docs)
 
 
+def change_country_case(core, aws_url, total_docs):
+    count = 1000
+    pages = int(total_docs / count)
+    rows = count
+    for i in range(pages):
+        print(i)
+        start = i * count
+        response = requests.get('http://' + aws_url + ':8983/solr/' + core + '/query?q=*&start='
+                                + str(start) + '&rows=' + str(rows))
+        json_response = response.json()
+        docs = json_response['response']['docs']
+        processed_docs = []
+        for doc in docs:
+            clear_deleted_fields(doc)
+            processed_docs.append(doc)
+        index_data(processed_docs)
+
+
+def update_actual_reply_count(core, aws_url, total_docs):
+    count = 1000
+    pages = int(total_docs / count)
+    rows = count
+    for i in range(pages):
+        print(i)
+        start = i * count
+        response = requests.get('http://' + aws_url + ':8983/solr/' + core + '/query?q=poi_name:*&start='
+                                + str(start) + '&rows=' + str(rows))
+        json_response = response.json()
+        docs = json_response['response']['docs']
+        processed_docs = []
+        for doc in docs:
+            clear_deleted_fields(doc)
+            count = get_actual_reply_count(doc)
+            if count > 0:
+                doc['i_replies'] = count
+                processed_docs.append(doc)
+        if len(processed_docs) > 0:
+            index_data(processed_docs)
+    pass
+
+
+def get_actual_reply_count(doc):
+    q = "replied_to_tweet_id:" + doc['id']
+    q = urllib.parse.quote(q, encoding="UTF-8")
+
+    reply_query = 'http://' + '3.20.12.127' + ':8983/solr/' + 'IRF21P1_demo' + '/query?q=' + \
+                  q + '&facet=true&facet.field=sentiment'
+    response = requests.get(reply_query)
+    json_response = response.json()
+    print(json_response)
+    return len(json_response['response']['docs'])
+
+
 if __name__ == '__main__':
     i = Indexer()
     t = Twitter()
@@ -163,10 +220,13 @@ if __name__ == '__main__':
     if arg_type == "1":
         print("coming in 1")
         do_sentiment_analysis(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=400000)  # Kavi
+    elif arg_type == "2":
+        change_country_case(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=400000)
+    elif arg_type == "3":
+        update_actual_reply_count(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=80000)
     else:
         print("coming in")
         get_tweet_insights(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000)  
     # else:
     #     print("updating the metrics fileds")
     #     populate_metrics_data(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000) #entire corpus to populate replies_count,retweets_count,quotes_count
-

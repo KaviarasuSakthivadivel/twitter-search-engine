@@ -8,6 +8,8 @@ import requests
 CORE_NAME = "IRF21P1_demo"
 # AWS_IP = "ec2-18-218-166-215.us-east-2.compute.amazonaws.com"
 AWS_IP = "3.20.12.127"
+
+
 # AWS_IP = "localhost"
 
 
@@ -192,6 +194,11 @@ class Indexer:
                     "name": "doc_magnitude",
                     "type": "pdouble",
                     "multiValued": False
+                },
+                {
+                    "name": "i_replies",
+                    "type": "pint",
+                    "multiValued": False
                 }
             ]
         }
@@ -213,6 +220,23 @@ class Indexer:
                 {
                     "name": "doc_magnitude",
                     "type": "pdouble",
+                    "multiValued": False
+                },
+                {
+                    "name": "i_replies",
+                    "type": "pint",
+                    "multiValued": False
+                }
+            ]
+        }
+        print(requests.post(self.core_url + "/schema", json=request_data).json())
+
+    def add_indexed_reply_count_field(self):
+        request_data = {
+            "add-field": [
+                {
+                    "name": "i_replies",
+                    "type": "pint",
                     "multiValued": False
                 }
             ]
@@ -237,14 +261,15 @@ class Indexer:
                     "type": "pint",
                     "multiValued": False
                 },
-                { "name": "quotes_count",
-                    "type": "pint",
-                    "multiValued": False
+                {"name": "quotes_count",
+                 "type": "pint",
+                 "multiValued": False
 
-                }
+                 }
             ]
         }
         print(requests.post(self.core_url + "/schema", json=request_data).json())
+
     def delete_metric_fields(self):
         request_data = {
             "delete-field": [
@@ -258,7 +283,7 @@ class Indexer:
                     "name": "retweet_count",
                 },
                 {
-                    "name":"quote_count"
+                    "name": "quote_count"
                 }
             ]
         }
@@ -399,7 +424,8 @@ if __name__ == "__main__":
     #     i.do_initial_setup()
     #     i.delete_fields()
     i = Indexer()
-    #i.delete_sentiment_fields()
-    #i.add_sentiment_fields()
-    #i.add_metrics_fields()
-    i.delete_metric_fields()
+    # i.delete_sentiment_fields()
+    # i.add_sentiment_fields()
+    # i.add_metrics_fields()
+    # i.delete_metric_fields()
+    i.add_indexed_reply_count_field()

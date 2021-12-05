@@ -166,10 +166,25 @@
             :chartData="wordCloudData"
             class="tw-container height500px col-span-6"
         ></TwCharts>
-        <TwCharts
+		<TwCharts
             :chartName="'timeSeries'"
             :chartData="timeSeriesData"
             class="tw-container height500px col-span-6"
+        ></TwCharts>
+		<TwCharts
+            :chartName="'column'"
+            :chartData="vaccineMentionsByCountryData"
+            class="tw-container height500px col-span-3 ddd"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'stimeSeries'"
+            :chartData="sentimentTimeSeriesData"
+            class="tw-container height500px col-span-3 ddd"
+        ></TwCharts>
+		<TwCharts
+            :chartName="'rtimeSeries'"
+            :chartData="vaccineCompaniesBySentimentData"
+            class="tw-container height500px col-span-3 ddd"
         ></TwCharts>
     </div>
 </template>
@@ -181,8 +196,12 @@ import {
     wordCloudData,
     countryChartData,
     timeSeriesData,
+	sentimentTimeSeriesData,
+	vaccineMentionsByCountryData,
+	vaccineCompaniesBySentimentData,
 } from '@/helpers/queryChartData'
 import analyticsMixinVue from '../helpers/analyticsMixin.vue'
+
 export default {
     mixins: [analyticsMixinVue],
     data: () => ({
@@ -193,6 +212,9 @@ export default {
         wordCloudData,
         countryChartData,
         timeSeriesData,
+		sentimentTimeSeriesData,
+		vaccineMentionsByCountryData,
+		vaccineCompaniesBySentimentData,
     }),
     created() {
         Promise.all([
@@ -213,11 +235,12 @@ export default {
         },
         async fetchDashboardData2() {
             try {
-                await this.$axios.get(`api/charts`)
+                let response = await this.$axios.get(`api/charts`)
+				this.formatVaccineChartData(response?.data)
             } catch (error) {
                 this.$message.error(error?.message)
             }
-        },
-    },
+        }
+	},
 }
 </script>

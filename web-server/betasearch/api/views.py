@@ -89,7 +89,7 @@ def search(request):
         query = "text_en:" + "(" + query + ")^10" + " OR " + "text_es:" + "(" + query + ")^10" + " OR " + "text_hi:" + "(" + query + ")^10" + \
                 "text_en:" + "(" + query_en + ")" + " OR " + "text_es:" + \
                 "(" + query_es + ")" + " OR " + \
-            "text_hi:" + "(" + query_hi + ")"
+                "text_hi:" + "(" + query_hi + ")"
         q = urllib.parse.quote(query, encoding="UTF-8")
 
         # POI Name filter
@@ -112,15 +112,15 @@ def search(request):
             created_timestamp = float(timestamp[0])
             end_timestamp = float(timestamp[1])
             end_timestamp = end_timestamp + 86400000.0
-            created_timestamp = created_timestamp/1000
-            end_timestamp = end_timestamp/1000
+            created_timestamp = created_timestamp / 1000
+            end_timestamp = end_timestamp / 1000
             created_timestamp = datetime.date.fromtimestamp(created_timestamp)
             end_timestamp = datetime.date.fromtimestamp(end_timestamp)
             created_tweetDate = created_timestamp.strftime(
                 "%Y-%m-%dT%H:%M:%SZ")
             end_tweetDate = end_timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
             f_query = f_query + " AND " + "tweet_date:" + \
-                "[" + created_tweetDate + " TO " + end_tweetDate + "]"
+                      "[" + created_tweetDate + " TO " + end_tweetDate + "]"
 
         # mentions filter
         if mentions is not None:
@@ -142,7 +142,7 @@ def search(request):
         # minimum replies filter
         if replyCount != 0:
             f_query = f_query + " AND " + "replies_count:" + \
-                "[" + str(replyCount) + " TO *" + "]"
+                      "[" + str(replyCount) + " TO *" + "]"
 
         # hashtags filter
         if hashtags is not None:
@@ -156,7 +156,7 @@ def search(request):
                       '=false&hl.fl=tweet_text '
         if f_query is not None:
             final_query += '&fq=' + \
-                urllib.parse.quote(f_query, encoding="UTF-8")
+                           urllib.parse.quote(f_query, encoding="UTF-8")
 
         # Facet query formulations
         facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
@@ -168,19 +168,19 @@ def search(request):
         response = requests.get(final_query, json=facet_json)
         json_response = response.json()
         json_response['time_taken'] = str(
-            round((time.time() - start_time), 2))+'s'
+            round((time.time() - start_time), 2)) + 's'
         return JsonResponse(json_response)
+
 
 @api_view(['GET', 'POST'])
 def get_replies(request, tweet_id):
-    if request.method=='GET':
-
-    # method to get the replies for a tweet using tweet id invoked by /api/get_replies/tweet_id/"
-        q = "replied_to_tweet_id:"+tweet_id
+    if request.method == 'GET':
+        # method to get the replies for a tweet using tweet id invoked by /api/get_replies/tweet_id/"
+        q = "replied_to_tweet_id:" + tweet_id
         q = urllib.parse.quote(q, encoding="UTF-8")
 
         reply_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-            q+'&facet=true&facet.field=sentiment'
+                      q + '&facet=true&facet.field=sentiment'
         response = requests.get(reply_query)
         json_response = response.json()
         return JsonResponse(json_response)
@@ -189,7 +189,7 @@ def get_replies(request, tweet_id):
 @api_view(['GET', 'POST'])
 def get_dashboard_data(request):
     query = 'http://' + settings.AWS_URL + \
-        ':8983/solr/' + settings.CORE + '/query?q=*'
+            ':8983/solr/' + settings.CORE + '/query?q=*'
 
     # Facet query formulations
     facet_json = {"facet": {"tweet_lang": {"type": "terms", "field": "tweet_lang", "limit": 20},
@@ -208,49 +208,43 @@ def get_chart_data(request):
     chart_response = {}
     # time series of sentiments
     query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + \
-        '/query?q=*&facet=true&facet.pivot=tweet_date,sentiment'
+            '/query?q=*&facet=true&facet.pivot=tweet_date,sentiment'
     response = requests.get(query)
     chart_response["time_with_sentiment"] = response.json()["facet_counts"]["facet_pivot"]
 
     # sentiment for each vaccines
-    
-
-           
-        
-    vaccines=["covishield","covaxin","pfizer","moderna","johnson and johnson","spu"]
-    sentiment_buckets=[]
-    country_buckets=[]
+    vaccines = ["covishield", "covaxin", "pfizer", "moderna", "johnson and johnson", "spu"]
+    sentiment_buckets = []
+    country_buckets = []
     for v in vaccines:
-        result={}
-        result_country={}
-        q="tweet_text:"+v
-        #sentiment for each vaccines
-        query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q='+q+'&facet=true&facet.field=sentiment'
+        result = {}
+        result_country = {}
+        q = "tweet_text:" + v
+        # sentiment for each vaccines
+        query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q + '&facet=true&facet.field=sentiment'
         response = requests.get(query)
-        s=response.json()
-        result["val"]=v
-        result["sentiment_score"]= response.json()["facet_counts"]["facet_fields"]["sentiment"]
-        
-        
+        s = response.json()
+        result["val"] = v
+        result["sentiment_score"] = response.json()["facet_counts"]["facet_fields"]["sentiment"]
+
         sentiment_buckets.append(result)
-        #vaccine with countries
-        query_country='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q='+q+'&facet=true&facet.field=country'
-        response_country= requests.get(query_country)
-        result_country["val"]=v
-        result_country["country"]=response_country.json()["facet_counts"]["facet_fields"]["country"]
+        # vaccine with countries
+        query_country = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q + '&facet=true&facet.field=country'
+        response_country = requests.get(query_country)
+        result_country["val"] = v
+        result_country["country"] = response_country.json()["facet_counts"]["facet_fields"]["country"]
         country_buckets.append(result_country)
 
-        chart_response["vaccine_sentiment"]=sentiment_buckets
-        chart_response["vaccine_countries"]=country_buckets
-        json_response=chart_response
-            
-    return JsonResponse(json_response,safe=False)
+    chart_response["vaccine_sentiment"] = sentiment_buckets
+    chart_response["vaccine_countries"] = country_buckets
+    return JsonResponse(chart_response, status=200, safe=False)
 
-@api_view(['GET', 'POST'])        
+
+@api_view(['GET', 'POST'])
 def get_news_article(request):
-     if request.method == 'POST':
+    if request.method == 'POST':
         query = request.data['query']
- 
+
         googlenews_en = GoogleNews(lang="en")
         googlenews_en.set_period('7d')
         googlenews_en.set_encode('utf-8')
@@ -277,8 +271,8 @@ def get_news_article(request):
             articles_dict["source"] = result['site']
             articles_dict["url"] = result['link']
             articles_list.append(articles_dict)
-            if(count>34):
-                    break
+            if (count > 34):
+                break
         count = 0
         for result in results_hi:
             count += 1
@@ -287,10 +281,10 @@ def get_news_article(request):
             articles_dict["source"] = result['site']
             articles_dict["url"] = result['link']
             articles_list.append(articles_dict)
-            if(count>34):
-                    break
-            
-        count = 0 
+            if (count > 34):
+                break
+
+        count = 0
         for result in results_es:
             count += 1
             articles_dict = {}
@@ -298,12 +292,10 @@ def get_news_article(request):
             articles_dict["source"] = result['site']
             articles_dict["url"] = result['link']
             articles_list.append(articles_dict)
-            if(count>34):
-                    break
+            if (count > 34):
+                break
 
         response_dict["docs"] = articles_list
         json_response = json.dumps(response_dict)
 
         return JsonResponse(json_response)
-
-

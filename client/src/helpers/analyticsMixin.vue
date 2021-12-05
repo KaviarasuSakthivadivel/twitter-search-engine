@@ -6,6 +6,7 @@ import {
     langVsLabel,
 } from '@/helpers/constants'
 import moment from 'moment'
+
 export default {
     methods: {
         formatChartData(data) {
@@ -81,6 +82,84 @@ export default {
                     .reverse()
             }
         },
+
+		formatVaccineChartData(data) {
+			if(data?.time_with_sentiment) {
+				let sentimentTweetDate = data.time_with_sentiment['tweet_date,sentiment']
+				let tweetDateDataArr = []
+				sentimentTweetDate.forEach((bucket) => {
+					if (moment(bucket.val).valueOf() > 1630468800000) {
+                        tweetDateDataArr.push([
+                            moment(bucket.val).valueOf(),
+                            bucket.count,
+                        ])
+                    }
+				})
+				this.sentimentTimeSeriesData.series[0].data = tweetDateDataArr
+					.sort((a, b) => {
+					    return b[0] - a[0]
+					})
+					.reverse()
+			}
+
+			if(data?.vaccine_countries) {
+				let categories = []
+				let vaccineByCountries = data.vaccine_countries;
+				let usaArr = []
+				let indiaArr = []
+				let mexicoArr = []
+				vaccineByCountries.forEach((vC) => {
+					categories.push(vC.val);
+					for(let i = 0; i < 6; i++) {
+						if(i === 0) {
+							usaArr.push(vC.country[i + 1]);
+						} else if(i === 2) {
+							indiaArr.push(vC.country[i + 1]);
+						} else if(i === 4){
+							mexicoArr.push(vC.country[i + 1]);
+						}
+					}
+				})
+
+				let seriesData = [];
+				seriesData.push({'name': "USA", 'data': usaArr})
+				seriesData.push({'name': "India", 'data': indiaArr})
+				seriesData.push({'name': "Mexico", 'data': mexicoArr})
+
+				this.vaccineMentionsByCountryData.xAxis.categories = categories
+				this.vaccineMentionsByCountryData.series = seriesData;
+			}
+
+			if(data?.vaccine_sentiment) {
+				let categories = []
+				let vaccineBySentiment = data.vaccine_sentiment;
+				let neutralArr = []
+				let negativeArr = []
+				let positiveArr = []
+				vaccineBySentiment.forEach((vS) => {
+					categories.push(vS.val);
+					for(let i = 0; i < 6; i++) {
+						if(i === 0) {
+							neutralArr.push(vS.sentiment_score[i + 1]);
+						} else if(i === 2) {
+							negativeArr.push(vS.sentiment_score[i + 1]);
+						} else if(i === 4){
+							positiveArr.push(vS.sentiment_score[i + 1]);
+						}
+					}
+				})
+
+				let seriesData = [];
+				seriesData.push({'name': "Neutral", 'data': neutralArr})
+				seriesData.push({'name': "Negative", 'data': negativeArr})
+				seriesData.push({'name': "Positive", 'data': positiveArr})
+
+				this.vaccineCompaniesBySentimentData.xAxis.categories = categories
+				this.vaccineCompaniesBySentimentData.series = seriesData;
+			}
+
+
+		}
     },
 }
 </script>
