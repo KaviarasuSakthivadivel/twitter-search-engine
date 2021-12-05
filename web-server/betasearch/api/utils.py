@@ -53,7 +53,20 @@ def populate_metrics_data(core, aws_url, total_docs):
                 processed_docs.append(doc)
         if len(processed_docs) > 0:
             index_data(processed_docs)
-        
+
+
+def clear_deleted_fields(doc):
+    if 'reply_count' in doc:
+        del doc['reply_count']
+    if 'like_count' in doc:
+        del doc['like_count']
+    if 'retweet_count' in doc:
+        del doc['retweet_count']
+    if 'quote_count' in doc:
+        del doc['quote_count']
+    if '_version_' in doc:
+        del doc['_version_']
+
 
 def do_sentiment_analysis(core, aws_url, total_docs):
     count = 1000
@@ -69,11 +82,11 @@ def do_sentiment_analysis(core, aws_url, total_docs):
         docs = json_response['response']['docs']
         processed_docs = []
         for doc in docs:
-            del doc['_version_']
             if 'sentiment' not in doc and doc['tweet_lang'] != 'hi':
                 # sentiment, score, magnitude = analyze_sentiment(doc['tweet_text'], doc['tweet_lang'])
                 sentiment, score, magnitude = analyze_sentiment(doc['tweet_text'])
                 print(sentiment)
+                clear_deleted_fields(doc)
                 doc['sentiment'] = sentiment
                 doc['doc_score'] = score
                 doc['doc_magnitude'] = magnitude
@@ -98,11 +111,7 @@ def get_tweet_insights(core, aws_url, total_docs):
         for doc in docs:
             if 'replies_count' in doc:
                 print(i)
-                del doc['_version_']
-                del doc['reply_count']
-                del doc['like_count']
-                del doc['retweet_count']
-                del doc['quote_count']
+                clear_deleted_fields(doc)
                 tweet_ids.append(doc['id'])
         if len(tweet_ids)>0:
             ids = ','.join(tweet_ids)
@@ -113,7 +122,6 @@ def get_tweet_insights(core, aws_url, total_docs):
 
 
 def update_doc_with_metrics(ids,docs):
-    
     tweet_metrics = t.get_metrics(ids)
     if len(tweet_metrics)>0:
         for doc in docs:
@@ -127,9 +135,6 @@ def update_doc_with_metrics(ids,docs):
                 # doc['profile_name'] = tweet_metrics[tweet_id]["profile_name"]
                 # doc['profile_url'] = tweet_metrics[tweet_id]["profile_url"]
                 # doc['verified'] = tweet_metrics[tweet_id]["verified"]
-        
-
-    
         return docs
     else:
         return []
@@ -154,8 +159,8 @@ if __name__ == '__main__':
 
     ############### Sentiment analysis code from google API ############
     arguments = sys.argv
-    type = arguments[1]
-    if type == "1":
+    arg_type = arguments[1]
+    if arg_type == "1":
         print("coming in 1")
         do_sentiment_analysis(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=400000)  # Kavi
     else:
