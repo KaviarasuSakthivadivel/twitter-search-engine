@@ -183,16 +183,17 @@ import {
     timeSeriesData,
 } from '@/helpers/queryChartData'
 import analyticsMixinVue from '../helpers/analyticsMixin.vue'
+import clone from 'lodash/clone'
 export default {
     mixins: [analyticsMixinVue],
     data: () => ({
         loading: true,
-        langChartData,
-        poiChartData,
-        sentimentChartData,
-        wordCloudData,
-        countryChartData,
-        timeSeriesData,
+        langChartData: clone(langChartData),
+        poiChartData: clone(poiChartData),
+        sentimentChartData: clone(sentimentChartData),
+        wordCloudData: clone(wordCloudData),
+        countryChartData: clone(countryChartData),
+        timeSeriesData: clone(timeSeriesData),
     }),
     created() {
         Promise.all([

@@ -4,7 +4,6 @@
         <el-skeleton :rows="4" animated class="mt-10" />
         <el-skeleton :rows="4" animated class="mt-10" />
     </div>
-
     <el-tabs v-else v-model="currentTab" class="pl-3 pr-3">
         <el-tab-pane
             label="Tweet Results"
@@ -18,80 +17,12 @@
                 {{ `Fetched ${totalDocs} tweets in ${timeTaken}` }}
             </div>
             <div class="flex flex-col p-5">
-                <div
+                <TweetCard
                     v-for="(tweet, index) in tweetsList"
                     :key="`tw-card-${index}`"
-                    :class="['results-card', index != 0 && 'mt-5']"
-                >
-                    <div
-                        @click="
-                            openTweet({ profile: tweet.username, id: tweet.id })
-                        "
-                    >
-                        <InlineSvg
-                            src="new-tab"
-                            iconClass="icon size-m new-tab-icon svg-color-blue"
-                        />
-                    </div>
-                    <div
-                        @click="openTwitterProfile(tweet.profile_name)"
-                        class="flex flex-row items-center tw-name-parent"
-                    >
-                        <el-avatar
-                            size="small"
-                            icon="el-icon-user-solid"
-                            :src="tweet.profile_url"
-                        ></el-avatar>
-                        <div class="ml-3 tw-id-name">
-                            {{ tweet.profile_name || 'Unknown' }}
-                        </div>
-
-                        <InlineSvg
-                            v-if="tweet.verified"
-                            src="verified"
-                            iconClass="icon size-sm ml-2px svg-color-blue"
-                        />
-                        <div class="ml-4px tw-handle-name">
-                            {{ `@${tweet.username}` || '@unknown' }}
-                        </div>
-                        <div class="tw-dot plr-4px">·</div>
-                        <div class="tw-handle-name">
-                            {{
-                                moment(tweet.tweet_date)
-                                    .utc()
-                                    .format('DD MMM YY')
-                            }}
-                        </div>
-                    </div>
-                    <div class="mt-2" v-html="tweet.highlightedText"></div>
-                    <div class="mt-5 flex justify-between w-5/12 items-center">
-                        <el-tag
-                            :type="getTagType(tweet.sentiment)"
-                            effect="plain"
-                            >{{
-                                sentimentVsLabel[tweet.sentiment] || 'Neutral'
-                            }}</el-tag
-                        >
-                        <div class="flex items-center tw-grey1">
-                            <InlineSvg
-                                src="reply"
-                                iconClass="icon size-sm mr-5px"
-                            />{{ tweet.replies_count || '0' }}
-                        </div>
-                        <div class="flex items-center tw-grey1">
-                            <InlineSvg
-                                src="retweets"
-                                iconClass="icon size-sm mr-5px"
-                            />{{ tweet.retweets_count || '0' }}
-                        </div>
-                        <div class="flex items-center tw-grey1">
-                            <InlineSvg
-                                src="likes"
-                                iconClass="icon size-sm mr-5px"
-                            />{{ tweet.likes_count || '0' }}
-                        </div>
-                    </div>
-                </div>
+                    :class="['results-card', index != 0 && 'mt-4']"
+                    :tweet="tweet"
+                ></TweetCard>
 
                 <div class="flex justify-center w-full mt-5">
                     <el-pagination
@@ -125,10 +56,12 @@ import {
 } from '@/helpers/constants'
 import QueryAnalytics from './QueryAnalytics.vue'
 import NewsArticles from './NewsArticles.vue'
+import TweetCard from './TweetCard.vue'
 export default {
     components: {
         QueryAnalytics,
         NewsArticles,
+        TweetCard,
     },
     data: () => ({
         tweetsList: [],
@@ -234,21 +167,6 @@ export default {
                 }
             })
             return { queryParams: params }
-        },
-        openTwitterProfile(profile) {
-            window.open(`http://twitter.com/${profile}`)
-        },
-        openTweet({ profile, id }) {
-            window.open(`http://twitter.com/${profile}/status/${id}`)
-        },
-        getTagType(sentiment) {
-            if (sentiment == 'positive') {
-                return 'success'
-            } else if (sentiment == 'neutral') {
-                return 'info'
-            } else if (sentiment == 'negative') {
-                return 'danger'
-            }
         },
     },
 }
