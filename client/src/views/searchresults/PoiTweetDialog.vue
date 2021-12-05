@@ -39,6 +39,13 @@
             <el-skeleton :rows="4" animated class="mt-10" />
             <el-skeleton :rows="4" animated class="mt-10" />
         </div>
+        <div
+            v-else-if="$_.isEmpty(replyTweets)"
+            class="flex flex-col items-center justify-center height-d1"
+        >
+            <InlineSvg src="no-data2" iconClass="icon size-100"></InlineSvg>
+            <div class="mt-5 no-data-text">No reply tweets found</div>
+        </div>
         <div v-else class="flex flex-row">
             <div
                 class="
@@ -81,7 +88,7 @@
 <script>
 import { sentimentChartData } from '@/helpers/queryChartData'
 import analyticsMixinVue from '@/helpers/analyticsMixin.vue'
-import clone from 'lodash/clone'
+import cloneDeep from 'lodash/cloneDeep'
 export default {
     props: ['tweet', 'visibility'],
     components: {
@@ -92,7 +99,7 @@ export default {
         visible: false,
         loading: true,
         replyTweets: [],
-        sentimentChartData: clone(sentimentChartData),
+        sentimentChartData: cloneDeep(sentimentChartData),
     }),
     mounted() {
         this.visible = true

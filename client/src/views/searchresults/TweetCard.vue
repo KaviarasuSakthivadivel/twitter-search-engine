@@ -60,6 +60,7 @@
             </div>
             <div
                 @click="openDialog"
+                v-if="tweet.poi_name"
                 class="flex items-center tw-blue1 hover:underline replies-class"
             >
                 Open Replies

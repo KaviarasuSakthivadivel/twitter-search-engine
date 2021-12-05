@@ -89,18 +89,18 @@ import {
     timeSeriesData,
 } from '@/helpers/queryChartData'
 import analyticsMixinVue from '@/helpers/analyticsMixin.vue'
-import clone from 'lodash/clone'
+import cloneDeep from 'lodash/cloneDeep'
 export default {
     props: ['chartData'],
     mixins: [analyticsMixinVue],
     data: () => ({
         loading: true,
-        poiChartData: clone(poiChartData),
-        langChartData: clone(langChartData),
-        sentimentChartData: clone(sentimentChartData),
-        wordCloudData: clone(wordCloudData),
-        countryChartData: clone(countryChartData),
-        timeSeriesData: clone(timeSeriesData),
+        poiChartData: cloneDeep(poiChartData),
+        langChartData: cloneDeep(langChartData),
+        sentimentChartData: cloneDeep(sentimentChartData),
+        wordCloudData: cloneDeep(wordCloudData),
+        countryChartData: cloneDeep(countryChartData),
+        timeSeriesData: cloneDeep(timeSeriesData),
     }),
     created() {
         this.formatChartData(this.chartData)

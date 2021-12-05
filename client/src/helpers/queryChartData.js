@@ -299,32 +299,32 @@ export const sentimentTimeSeriesData = {
     ],
 }
 
-
 export const vaccineMentionsByCountryData = {
     chart: {
-        type: 'column'
+        type: 'column',
     },
     title: {
-        text: 'Vaccine mention by country'
+        text: 'Vaccine mention by country',
     },
     xAxis: {
-        categories: []
+        categories: [],
     },
     yAxis: {
         min: 0,
         title: {
-            text: ' Vaccine sentiment by Country'
+            text: ' Vaccine sentiment by Country',
         },
         stackLabels: {
             enabled: true,
             style: {
                 fontWeight: 'bold',
-                color: ( // theme
-                    Highcharts.defaultOptions.title.style &&
-                    Highcharts.defaultOptions.title.style.color
-                ) || 'gray'
-            }
-        }
+                color:
+                    // theme
+                    (Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color) ||
+                    'gray',
+            },
+        },
     },
     legend: {
         align: 'right',
@@ -336,49 +336,49 @@ export const vaccineMentionsByCountryData = {
             Highcharts.defaultOptions.legend.backgroundColor || 'white',
         borderColor: '#CCC',
         borderWidth: 1,
-        shadow: false
+        shadow: false,
     },
     tooltip: {
         headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}',
     },
     plotOptions: {
         column: {
             stacking: 'normal',
             dataLabels: {
-                enabled: true
-            }
-        }
+                enabled: true,
+            },
+        },
     },
-    series: []
+    series: [],
 }
-
 
 export const vaccineCompaniesBySentimentData = {
     chart: {
-        type: 'column'
+        type: 'column',
     },
     title: {
-        text: 'Covid Vaccine Sentiment'
+        text: 'Covid Vaccine Sentiment',
     },
     xAxis: {
-        categories: []
+        categories: [],
     },
     yAxis: {
         min: 0,
         title: {
-            text: ' Vaccine sentiment'
+            text: ' Vaccine sentiment',
         },
         stackLabels: {
             enabled: true,
             style: {
                 fontWeight: 'bold',
-                color: ( // theme
-                    Highcharts.defaultOptions.title.style &&
-                    Highcharts.defaultOptions.title.style.color
-                ) || 'gray'
-            }
-        }
+                color:
+                    // theme
+                    (Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color) ||
+                    'gray',
+            },
+        },
     },
     legend: {
         align: 'right',
@@ -390,19 +390,19 @@ export const vaccineCompaniesBySentimentData = {
             Highcharts.defaultOptions.legend.backgroundColor || 'white',
         borderColor: '#CCC',
         borderWidth: 1,
-        shadow: false
+        shadow: false,
     },
     tooltip: {
         headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}',
     },
     plotOptions: {
         column: {
             stacking: 'normal',
             dataLabels: {
-                enabled: true
-            }
-        }
+                enabled: true,
+            },
+        },
     },
-    series: []
+    series: [],
 }

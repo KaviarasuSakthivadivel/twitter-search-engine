@@ -415,12 +415,6 @@ svg.icon {
     padding-right: 4px;
 }
 
-.red-circle {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    background-color: rgb(249, 24, 128);
-}
 .font-color1 {
     color: #d7dde4;
 }
@@ -434,4 +428,8 @@ svg.icon {
 }
 .width40p {
     width: 40%;
+}
+.no-data-text {
+    font-weight: 500;
+    font-size: 28px;
 }

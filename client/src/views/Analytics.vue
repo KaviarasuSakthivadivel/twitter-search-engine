@@ -166,12 +166,12 @@
             :chartData="wordCloudData"
             class="tw-container height500px col-span-6"
         ></TwCharts>
-		<TwCharts
+        <TwCharts
             :chartName="'timeSeries'"
             :chartData="timeSeriesData"
             class="tw-container height500px col-span-6"
         ></TwCharts>
-		<TwCharts
+        <TwCharts
             :chartName="'column'"
             :chartData="vaccineMentionsByCountryData"
             class="tw-container height500px col-span-3 ddd"
@@ -181,7 +181,7 @@
             :chartData="sentimentTimeSeriesData"
             class="tw-container height500px col-span-3 ddd"
         ></TwCharts>
-		<TwCharts
+        <TwCharts
             :chartName="'rtimeSeries'"
             :chartData="vaccineCompaniesBySentimentData"
             class="tw-container height500px col-span-3 ddd"
@@ -196,25 +196,27 @@ import {
     wordCloudData,
     countryChartData,
     timeSeriesData,
-	sentimentTimeSeriesData,
-	vaccineMentionsByCountryData,
-	vaccineCompaniesBySentimentData,
+    sentimentTimeSeriesData,
+    vaccineMentionsByCountryData,
+    vaccineCompaniesBySentimentData,
 } from '@/helpers/queryChartData'
 import analyticsMixinVue from '../helpers/analyticsMixin.vue'
-import clone from 'lodash/clone'
+import cloneDeep from 'lodash/cloneDeep'
 export default {
     mixins: [analyticsMixinVue],
     data: () => ({
         loading: true,
-        langChartData: clone(langChartData),
-        poiChartData: clone(poiChartData),
-        sentimentChartData: clone(sentimentChartData),
-        wordCloudData: clone(wordCloudData),
-        countryChartData: clone(countryChartData),
-        timeSeriesData: clone(timeSeriesData),
-		sentimentTimeSeriesData: clone(sentimentTimeSeriesData),
-		vaccineMentionsByCountryData: clone(vaccineMentionsByCountryData),
-		vaccineCompaniesBySentimentData: clone(vaccineCompaniesBySentimentData),
+        langChartData: cloneDeep(langChartData),
+        poiChartData: cloneDeep(poiChartData),
+        sentimentChartData: cloneDeep(sentimentChartData),
+        wordCloudData: cloneDeep(wordCloudData),
+        countryChartData: cloneDeep(countryChartData),
+        timeSeriesData: cloneDeep(timeSeriesData),
+        sentimentTimeSeriesData: cloneDeep(sentimentTimeSeriesData),
+        vaccineMentionsByCountryData: cloneDeep(vaccineMentionsByCountryData),
+        vaccineCompaniesBySentimentData: cloneDeep(
+            vaccineCompaniesBySentimentData
+        ),
     }),
     created() {
         Promise.all([
@@ -236,11 +238,11 @@ export default {
         async fetchDashboardData2() {
             try {
                 let response = await this.$axios.get(`api/charts`)
-				this.formatVaccineChartData(response?.data)
+                this.formatVaccineChartData(response?.data)
             } catch (error) {
                 this.$message.error(error?.message)
             }
-        }
-	},
+        },
+    },
 }
 </script>
