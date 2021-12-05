@@ -111,12 +111,12 @@ export default {
                 let mexicoArr = []
                 vaccineByCountries.forEach((vC) => {
                     categories.push(vC.val)
-                    for (let i = 0; i < 6; i++) {
-                        if (i === 0) {
+                    for (let i = 0; i <= 6; i += 2) {
+                        if (vC.country[i] == 'USA') {
                             usaArr.push(vC.country[i + 1])
-                        } else if (i === 2) {
+                        } else if (vC.country[i] == 'India') {
                             indiaArr.push(vC.country[i + 1])
-                        } else if (i === 4) {
+                        } else if (vC.country[i] == 'Mexico') {
                             mexicoArr.push(vC.country[i + 1])
                         }
                     }
@@ -139,21 +139,33 @@ export default {
                 let positiveArr = []
                 vaccineBySentiment.forEach((vS) => {
                     categories.push(vS.val)
-                    for (let i = 0; i < 6; i++) {
-                        if (i === 0) {
+                    for (let i = 0; i <= 6; i += 2) {
+                        if (vS.sentiment_score[i] == 'neutral') {
                             neutralArr.push(vS.sentiment_score[i + 1])
-                        } else if (i === 2) {
+                        } else if (vS.sentiment_score[i] == 'negative') {
                             negativeArr.push(vS.sentiment_score[i + 1])
-                        } else if (i === 4) {
+                        } else if (vS.sentiment_score[i] == 'positive') {
                             positiveArr.push(vS.sentiment_score[i + 1])
                         }
                     }
                 })
 
                 let seriesData = []
-                seriesData.push({ name: 'Neutral', data: neutralArr })
-                seriesData.push({ name: 'Negative', data: negativeArr })
-                seriesData.push({ name: 'Positive', data: positiveArr })
+                seriesData.push({
+                    name: 'Neutral',
+                    data: neutralArr,
+                    color: sentimentVsColor['neutral'],
+                })
+                seriesData.push({
+                    name: 'Negative',
+                    data: negativeArr,
+                    color: sentimentVsColor['negative'],
+                })
+                seriesData.push({
+                    name: 'Positive',
+                    data: positiveArr,
+                    color: sentimentVsColor['positive'],
+                })
 
                 this.vaccineCompaniesBySentimentData.xAxis.categories =
                     categories
