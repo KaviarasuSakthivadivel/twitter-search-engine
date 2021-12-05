@@ -244,8 +244,33 @@ def get_chart_data(request):
         )["facet_counts"]["facet_fields"]["country"]
         country_buckets.append(result_country)
 
+    query_positive_persuation = "(Get vaccinated) (Get your vaccine) getvaccinatednow getvaccinated vaccinessavelives " + \
+            "vaccinemandate largestvaccinedrive campañadevacunación we4vaccine vaccinationdrive getvaxxed (campaña de vacunación) (vaccination drive) " + \
+            "(vaccine mandate) (Vaccines work) (Vaccines can save lives) (Get a vaccine) (Find a vaccine) (vaccinated is safe) (vaccinated is easy) " + \
+            "(vaccines near you) (getting vaccin) (vaccine remains our strongest)"
+    translation_words = "getvaccinatednow getvaccinated vaccinessavelives vaccinemandate largestvaccinedrive we4vaccine vaccinationdrive getvaxxed Vaccineswork"
+
+    translator_en = translator.translate(translation_words, dest='en')
+    query_en = translator_en.text
+    translator_es = translator.translate(translation_words, dest='es')
+    query_es = translator_es.text
+    translator_hi = translator.translate(translation_words, dest='hi')
+    query_hi = translator_hi.text
+
+    query_positive_persuation = "text_en:" + "(" + query_positive_persuation + ")" + " OR " + "text_es:" + "(" + query_positive_persuation + ")" + \
+                " OR " + "text_hi:" + "(" + query_positive_persuation + ")" + \
+                " OR " + "text_en:" + "(" + query_en + ")" + " OR " + "text_es:" + \
+                "(" + query_es + ")" + " OR " + \
+                "text_hi:" + "(" + query_hi + ")"
+
+    q_positive_persuation = urllib.parse.quote(query_positive_persuation, encoding="UTF-8")
+    facet_json = {"facet": {"poi_name": {"type": "terms", "field": "poi_name", "limit": 30}}}
+    query_positive_persuation = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_positive_persuation
+    response_positive_persuation = requests.get(query_positive_persuation, json=facet_json)
+
     chart_response["vaccine_sentiment"] = sentiment_buckets
     chart_response["vaccine_countries"] = country_buckets
+    chart_response["vaccine_positive_persuation"] = response_positive_persuation.json()
 
     return JsonResponse(chart_response, safe=False)
 
