@@ -53,40 +53,123 @@
             w-full
             grid
             gap-4
-            grid-cols-3
+            grid-cols-6
             overflow-y-scroll
         "
     >
+        <div
+            class="
+                tw-container
+                height200px
+                col-span-1
+                card-1
+                flex flex-col
+                justify-around
+            "
+        >
+            <div class="title-text-1">3,77,287</div>
+            <div class="title-text-2">Total Tweets</div>
+        </div>
+        <div
+            class="
+                tw-container
+                height200px
+                col-span-1
+                card-1
+                bg2
+                flex flex-col
+                justify-around
+            "
+        >
+            <div class="title-text-1">102</div>
+            <div class="title-text-2">POI's</div>
+        </div>
+        <div
+            class="
+                tw-container
+                height200px
+                col-span-1
+                card-1
+                bg4
+                flex flex-col
+                justify-around
+            "
+        >
+            <div class="title-text-1">79,926</div>
+            <div class="title-text-2">POI Tweets</div>
+        </div>
+        <div
+            class="
+                tw-container
+                height200px
+                col-span-1
+                card-1
+                bg3
+                flex flex-col
+                justify-around
+            "
+        >
+            <div class="title-text-1">3</div>
+            <div class="title-text-2">Languages</div>
+        </div>
+        <div
+            class="
+                tw-container
+                height200px
+                col-span-1
+                card-1
+                bg5
+                flex flex-col
+                justify-around
+            "
+        >
+            <div class="title-text-1">1,62,793</div>
+            <div class="title-text-2">Reply Tweets</div>
+        </div>
+        <div
+            class="
+                tw-container
+                height200px
+                col-span-1
+                card-1
+                bg6
+                flex flex-col
+                justify-around
+            "
+        >
+            <div class="title-text-1">34,213</div>
+            <div class="title-text-2">Replies to POI's</div>
+        </div>
         <TwCharts
             :chartName="'poiChart'"
             :chartData="poiChartData"
-            class="tw-container height500px col-span-3"
+            class="tw-container height500px col-span-6"
         ></TwCharts>
         <TwCharts
             :chartName="'sentimentChart'"
             :chartData="sentimentChartData"
-            class="tw-container height300px col-span-1"
+            class="tw-container height300px col-span-2"
         ></TwCharts>
 
         <TwCharts
             :chartName="'langChart'"
             :chartData="langChartData"
-            class="tw-container height300px col-span-1"
+            class="tw-container height300px col-span-2"
         ></TwCharts>
         <TwCharts
             :chartName="'countryChartData'"
             :chartData="countryChartData"
-            class="tw-container height300px col-span-1"
+            class="tw-container height300px col-span-2"
         ></TwCharts>
         <TwCharts
             :chartName="'wordCloud'"
             :chartData="wordCloudData"
-            class="tw-container height500px col-span-3"
+            class="tw-container height500px col-span-6"
         ></TwCharts>
         <TwCharts
             :chartName="'timeSeries'"
             :chartData="timeSeriesData"
-            class="tw-container height500px col-span-3"
+            class="tw-container height500px col-span-6"
         ></TwCharts>
     </div>
 </template>
