@@ -169,18 +169,19 @@ def search(request):
             round((time.time() - start_time), 2))+'s'
         return JsonResponse(json_response)
 
-
+@api_view(['GET', 'POST'])
 def get_replies(request, tweet_id):
+    if request.method=='GET':
 
     # method to get the replies for a tweet using tweet id invoked by /api/get_replies/tweet_id/"
-    q = "replied_to_tweet_id:"+tweet_id
-    q = urllib.parse.quote(q, encoding="UTF-8")
+        q = "replied_to_tweet_id:"+tweet_id
+        q = urllib.parse.quote(q, encoding="UTF-8")
 
-    reply_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-        q
-    response = requests.get(reply_query)
-    json_response = response.json()
-    return JsonResponse(json_response)
+        reply_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
+            q+'&facet=true&facet.field=sentiment'
+        response = requests.get(reply_query)
+        json_response = response.json()
+        return JsonResponse(json_response)
 
 
 @api_view(['GET', 'POST'])
@@ -207,24 +208,49 @@ def get_chart_data(request):
     query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + \
         '/query?q=*&facet=true&facet.pivot=tweet_date,sentiment'
     response = requests.get(query)
-    chart_response["time_with_sentiment"] = response.json()[
-        "facet_counts"]["facet_pivot"]
+    chart_response["time_with_sentiment"] = response.json()["facet_counts"]["facet_pivot"]
 
     # sentiment for each vaccines
-    vaccines = ["covishield", "covaxin", "pfizer",
-                "moderna", "johnson and johnson"]
-    buckets = []
-    for v in vaccines:
-        result = {}
-        q = "tweet_text:"+v
-        query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + \
-            '/query?q='+q+'&facet=true&fact.field=sentiment&facet.query=sentiment:negative'
-        response = requests.get(query)
-        json_response = response.json()
-        result["val"] = v
-        result["hestitant_score"] = json_response["facet_counts"]["facet_queries"]["sentiment:negative"]
-        buckets.append(result)
-    chart_response["vaccine_hesitancy"] = buckets
-    json_response = chart_response
+    
 
-    return JsonResponse(json_response, safe=False)
+           
+        
+    vaccines=["covishield","covaxin","pfizer","moderna","johnson and johnson","spu"]
+    sentiment_buckets=[]
+    country_buckets=[]
+    for v in vaccines:
+        result={}
+        result_country={}
+        q="tweet_text:"+v
+        #sentiment for each vaccines
+        query='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q='+q+'&facet=true&facet.field=sentiment'
+        response = requests.get(query)
+        s=response.json()
+        result["val"]=v
+        result["sentiment_score"]= response.json()["facet_counts"]["facet_fields"]["sentiment"]
+        
+        
+        sentiment_buckets.append(result)
+        #vaccine with countries
+        query_country='http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q='+q+'&facet=true&facet.field=country'
+        response_country= requests.get(query_country)
+        result_country["val"]=v
+        result_country["country"]=response_country.json()["facet_counts"]["facet_fields"]["country"]
+        country_buckets.append(result_country)
+
+        chart_response["vaccine_sentiment"]=sentiment_buckets
+        chart_response["vaccine_countries"]=country_buckets
+        json_response=chart_response
+            
+    return JsonResponse(json_response,safe=False)
+
+        
+            
+
+        
+        
+
+
+        
+
+   
