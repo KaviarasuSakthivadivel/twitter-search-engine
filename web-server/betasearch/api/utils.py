@@ -9,6 +9,8 @@ from sentiment_analysis import analyze_sentiment
 from twitter import Twitter
 
 
+import json
+
 def download_data(core, aws_url, total_docs):
     count = 1000
     pages = int(total_docs / count)
@@ -142,6 +144,33 @@ def update_doc_with_metrics(ids,docs):
         return docs
     else:
         return []
+def get_top_influencers(aws_url,core):
+    poi_list=["DrEricDing","lopezobrador_","SSalud_mx","EPN","PMOIndia","RahulGandhi","narendramodi","VP","rashtrapatibhvn","CDCgov","COVIDNewsByMIB","DrEricDing","CDCDirector","MyGovHindi","SpeakerPelosi","COFEPRIS","HLGatell","DrTomFrieden","ArvindKejriwal","NIH","EricTopol","KamalaHarris","MoHFW_INDIA","nycHealthy","AmitShah","POTUS","JoeBiden","ICMRDELHI","SaludEdomex","MarkoCortes","RicardoMonrealA","BarackObama","XavierBecerra","redaccionmedica","ewarren"] 
+    poi_influencers={}
+    for p in poi_list:
+        q="poi_name:"+p
+        q= urllib.parse.quote(q, encoding="UTF-8")
+
+        query='http://' + aws_url + ':8983/solr/' + core + '/query?q='+q+'&fq=replies_count:[0 TO 1000]'
+        response = requests.get(query)
+        json_response = response.json()
+        docs = json_response['response']['docs']
+        count=0
+        for doc in docs:
+            q = "replied_to_tweet_id:"+doc['id']
+            q = urllib.parse.quote(q, encoding="UTF-8")
+
+            reply_query = 'http://' + aws_url + ':8983/solr/' + core + '/query?q=' + \
+            q
+            response = requests.get(reply_query)
+            json_response = response.json()
+            reply_docs=json_response['response']['docs']
+            count+=len(reply_docs)
+        poi_influencers[p]=count
+    print(poi_influencers)
+    return poi_influencers
+
+
 
 
 def index_data(docs):
@@ -226,7 +255,8 @@ if __name__ == '__main__':
         update_actual_reply_count(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=80000)
     else:
         print("coming in")
-        get_tweet_insights(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000)  
+        #get_tweet_insights(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000)  
+        get_top_influencers(core='IRF21P1_demo', aws_url='3.20.12.127')
     # else:
     #     print("updating the metrics fileds")
     #     populate_metrics_data(core='IRF21P1_demo', aws_url='3.20.12.127', total_docs=380000) #entire corpus to populate replies_count,retweets_count,quotes_count

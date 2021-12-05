@@ -223,10 +223,18 @@ def get_chart_data(request):
         # sentiment for each vaccines
         query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q + '&facet=true&facet.field=sentiment'
         response = requests.get(query)
+<<<<<<< Updated upstream
         s = response.json()
         result["val"] = v
         result["sentiment_score"] = response.json()["facet_counts"]["facet_fields"]["sentiment"]
 
+=======
+        
+        result["val"]=v
+        result["sentiment_score"]= response.json()["facet_counts"]["facet_fields"]["sentiment"]
+        
+        
+>>>>>>> Stashed changes
         sentiment_buckets.append(result)
         # vaccine with countries
         query_country = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q + '&facet=true&facet.field=country'
@@ -235,10 +243,18 @@ def get_chart_data(request):
         result_country["country"] = response_country.json()["facet_counts"]["facet_fields"]["country"]
         country_buckets.append(result_country)
 
+<<<<<<< Updated upstream
     chart_response["vaccine_sentiment"] = sentiment_buckets
     chart_response["vaccine_countries"] = country_buckets
     return JsonResponse(chart_response, status=200, safe=False)
 
+=======
+        chart_response["vaccine_sentiment"]=sentiment_buckets
+        chart_response["vaccine_countries"]=country_buckets
+        json_response=chart_response
+    
+    return JsonResponse(json_response,safe=False)
+>>>>>>> Stashed changes
 
 @api_view(['GET', 'POST'])
 def get_news_article(request):
