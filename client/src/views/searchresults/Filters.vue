@@ -16,6 +16,7 @@
                 v-model="poiName"
                 clearable
                 multiple
+                filterable
                 collapse-tags
             >
                 <el-option
@@ -32,6 +33,7 @@
                 v-model="tweetLang"
                 clearable
                 multiple
+                filterable
                 collapse-tags
             >
                 <el-option
@@ -48,6 +50,7 @@
                 v-model="country"
                 clearable
                 multiple
+                filterable
                 collapse-tags
             >
                 <el-option
@@ -64,6 +67,7 @@
                 v-model="sentiment"
                 clearable
                 multiple
+                filterable
                 collapse-tags
             >
                 <el-option
