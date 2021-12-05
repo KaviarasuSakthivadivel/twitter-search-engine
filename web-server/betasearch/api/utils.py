@@ -115,7 +115,7 @@ def get_tweet_insights(core, aws_url, total_docs):
         processed_docs = []
         tweet_ids=[]
         for doc in docs:
-            if 'replies_count' in doc:
+            if 'replies_count' in doc and 'likes_count' not in doc:
                 print(i)
                 clear_deleted_fields(doc)
                 tweet_ids.append(doc['id'])
@@ -145,29 +145,42 @@ def update_doc_with_metrics(ids,docs):
     else:
         return []
 def get_top_influencers(aws_url,core):
-    poi_list=["DrEricDing","lopezobrador_","SSalud_mx","EPN","PMOIndia","RahulGandhi","narendramodi","VP","rashtrapatibhvn","CDCgov","COVIDNewsByMIB","DrEricDing","CDCDirector","MyGovHindi","SpeakerPelosi","COFEPRIS","HLGatell","DrTomFrieden","ArvindKejriwal","NIH","EricTopol","KamalaHarris","MoHFW_INDIA","nycHealthy","AmitShah","POTUS","JoeBiden","ICMRDELHI","SaludEdomex","MarkoCortes","RicardoMonrealA","BarackObama","XavierBecerra","redaccionmedica","ewarren"] 
+    poi_list=["redaccionmedica","ewarren","m_ebrard","HillaryClinton","alfredodelmazo","Claudiashein","HillsboroughFL","ShashiTharoor","drharshvardhan","myogiadityanath","ECDOH","PiyushGoyal","FelipeCalderon","BJP4India","mansukhmandviya","smritiirani","Mzavalagc","GovKathyHochul","MIB_India"] 
     poi_influencers={}
+    
     for p in poi_list:
+        processed_docs=[]
         q="poi_name:"+p
         q= urllib.parse.quote(q, encoding="UTF-8")
 
-        query='http://' + aws_url + ':8983/solr/' + core + '/query?q='+q+'&fq=replies_count:[0 TO 1000]'
+        query='http://' + aws_url + ':8983/solr/' + core + '/query?q='+q+'&start=0&rows=3200'
         response = requests.get(query)
         json_response = response.json()
+        print(json_response['response']["numFound"])
         docs = json_response['response']['docs']
         count=0
+        poi_influencers[p]=str(len(docs))+","
         for doc in docs:
             q = "replied_to_tweet_id:"+doc['id']
             q = urllib.parse.quote(q, encoding="UTF-8")
 
             reply_query = 'http://' + aws_url + ':8983/solr/' + core + '/query?q=' + \
-            q
+            q+'&fq=replies_count:[0 TO 100]'+'&start=0&rows=2000'
             response = requests.get(reply_query)
             json_response = response.json()
             reply_docs=json_response['response']['docs']
+            clear_deleted_fields(doc)
+            if len(reply_docs) > 0:
+                doc['i_replies'] = len(reply_docs)
+                processed_docs.append(doc)
             count+=len(reply_docs)
-        poi_influencers[p]=count
+        poi_influencers[p]=poi_influencers[p]+str(count)
+        
+        if len(processed_docs) > 0:
+                index_data(processed_docs)
+        print(poi_influencers)
     print(poi_influencers)
+
     return poi_influencers
 
 
