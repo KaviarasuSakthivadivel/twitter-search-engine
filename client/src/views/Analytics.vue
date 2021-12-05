@@ -171,20 +171,22 @@
             :chartData="timeSeriesData"
             class="tw-container height500px col-span-6"
         ></TwCharts>
+
         <TwCharts
             :chartName="'column'"
             :chartData="vaccineMentionsByCountryData"
-            class="tw-container height500px col-span-3 ddd"
-        ></TwCharts>
-        <TwCharts
-            :chartName="'stimeSeries'"
-            :chartData="sentimentTimeSeriesData"
-            class="tw-container height500px col-span-3 ddd"
+            class="tw-container height500px col-span-3"
         ></TwCharts>
         <TwCharts
             :chartName="'rtimeSeries'"
             :chartData="vaccineCompaniesBySentimentData"
-            class="tw-container height500px col-span-3 ddd"
+            class="tw-container height500px col-span-3"
+        ></TwCharts>
+
+        <TwCharts
+            :chartName="'stimeSeries'"
+            :chartData="sentimentTimeSeriesData"
+            class="tw-container height500px col-span-6"
         ></TwCharts>
     </div>
 </template>

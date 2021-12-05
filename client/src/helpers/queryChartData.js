@@ -237,6 +237,7 @@ export const timeSeriesData = {
 export const sentimentTimeSeriesData = {
     chart: {
         zoomType: 'x',
+        type: 'spline',
     },
     title: {
         text: 'Sentiment time series',
@@ -256,9 +257,14 @@ export const sentimentTimeSeriesData = {
         },
     },
     legend: {
-        enabled: false,
+        enabled: true,
     },
     plotOptions: {
+        series: {
+            marker: {
+                enabled: false,
+            },
+        },
         area: {
             fillColor: {
                 linearGradient: {
@@ -268,7 +274,7 @@ export const sentimentTimeSeriesData = {
                     y2: 1,
                 },
                 stops: [
-                    [0, Highcharts.getOptions().colors[0]],
+                    [0, Highcharts.getOptions().colors[1]],
                     [
                         1,
                         Highcharts.color(Highcharts.getOptions().colors[0])
@@ -290,13 +296,7 @@ export const sentimentTimeSeriesData = {
         },
     },
 
-    series: [
-        {
-            type: 'area',
-            name: 'Tweet count by sentiment',
-            data: [],
-        },
-    ],
+    series: [],
 }
 
 export const vaccineMentionsByCountryData = {
@@ -312,7 +312,7 @@ export const vaccineMentionsByCountryData = {
     yAxis: {
         min: 0,
         title: {
-            text: ' Vaccine sentiment by Country',
+            text: ' Tweets count by country',
         },
         stackLabels: {
             enabled: true,
@@ -366,7 +366,7 @@ export const vaccineCompaniesBySentimentData = {
     yAxis: {
         min: 0,
         title: {
-            text: ' Vaccine sentiment',
+            text: ' Tweets count by sentiment',
         },
         stackLabels: {
             enabled: true,

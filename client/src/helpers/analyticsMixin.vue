@@ -87,20 +87,66 @@ export default {
             if (data?.time_with_sentiment) {
                 let sentimentTweetDate =
                     data.time_with_sentiment['tweet_date,sentiment']
-                let tweetDateDataArr = []
+                let positiveDataArr = []
+                let negativeDataArr = []
+                let neutralDataArr = []
                 sentimentTweetDate.forEach((bucket) => {
-                    if (moment(bucket.val).valueOf() > 1630468800000) {
-                        tweetDateDataArr.push([
-                            moment(bucket.val).valueOf(),
-                            bucket.count,
-                        ])
+                    if (moment(bucket.value).valueOf() > 0) {
+                        bucket.pivot.forEach((pi) => {
+                            if (pi.value == 'positive') {
+                                positiveDataArr.push([
+                                    moment(bucket.value).valueOf(),
+                                    pi.count,
+                                ])
+                            }
+                            if (pi.value == 'negative') {
+                                negativeDataArr.push([
+                                    moment(bucket.value).valueOf(),
+                                    pi.count,
+                                ])
+                            }
+                            if (pi.value == 'neutral') {
+                                neutralDataArr.push([
+                                    moment(bucket.value).valueOf(),
+                                    pi.count,
+                                ])
+                            }
+                        })
                     }
                 })
-                this.sentimentTimeSeriesData.series[0].data = tweetDateDataArr
+                positiveDataArr = positiveDataArr
                     .sort((a, b) => {
                         return b[0] - a[0]
                     })
                     .reverse()
+                negativeDataArr = negativeDataArr
+                    .sort((a, b) => {
+                        return b[0] - a[0]
+                    })
+                    .reverse()
+                neutralDataArr = neutralDataArr
+                    .sort((a, b) => {
+                        return b[0] - a[0]
+                    })
+                    .reverse()
+                this.sentimentTimeSeriesData.series
+                this.sentimentTimeSeriesData.series.push(
+                    {
+                        data: positiveDataArr,
+                        name: 'Postive',
+                        color: sentimentVsColor['positive'],
+                    },
+                    {
+                        data: negativeDataArr,
+                        name: 'Negative',
+                        color: sentimentVsColor['negative'],
+                    },
+                    {
+                        data: neutralDataArr,
+                        name: 'Neutral',
+                        color: sentimentVsColor['neutral'],
+                    }
+                )
             }
 
             if (data?.vaccine_countries) {
