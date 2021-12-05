@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import urllib.request
 from googletrans import Translator
+from GoogleNews import GoogleNews
+import json
 
 translator = Translator()
 
@@ -244,13 +246,64 @@ def get_chart_data(request):
             
     return JsonResponse(json_response,safe=False)
 
-        
+@api_view(['GET', 'POST'])        
+def get_news_article(request):
+     if request.method == 'POST':
+        query = request.data['query']
+ 
+        googlenews_en = GoogleNews(lang="en")
+        googlenews_en.set_period('7d')
+        googlenews_en.set_encode('utf-8')
+        googlenews_en.get_news(query)
+        results_en = googlenews_en.results(sort=True)
+        googlenews_hi = GoogleNews(lang="hi")
+        googlenews_hi.set_period('7d')
+        googlenews_hi.set_encode('utf-8')
+        googlenews_hi.get_news(query)
+        results_hi = googlenews_hi.results(sort=True)
+        googlenews_es = GoogleNews(lang="es")
+        googlenews_es.set_period('7d')
+        googlenews_es.set_encode('utf-8')
+        googlenews_es.get_news(query)
+        results_es = googlenews_es.results(sort=True)
+        response_dict = {}
+        articles_list = []
+
+        count = 0
+        for result in results_en:
+            count += 1
+            articles_dict = {}
+            articles_dict["title"] = result['title']
+            articles_dict["source"] = result['site']
+            articles_dict["url"] = result['link']
+            articles_list.append(articles_dict)
+            if(count>34):
+                    break
+        count = 0
+        for result in results_hi:
+            count += 1
+            articles_dict = {}
+            articles_dict["title"] = result['title']
+            articles_dict["source"] = result['site']
+            articles_dict["url"] = result['link']
+            articles_list.append(articles_dict)
+            if(count>34):
+                    break
             
+        count = 0 
+        for result in results_es:
+            count += 1
+            articles_dict = {}
+            articles_dict["title"] = result['title']
+            articles_dict["source"] = result['site']
+            articles_dict["url"] = result['link']
+            articles_list.append(articles_dict)
+            if(count>34):
+                    break
 
-        
-        
+        response_dict["docs"] = articles_list
+        json_response = json.dumps(response_dict)
+
+        return JsonResponse(json_response)
 
 
-        
-
-   
