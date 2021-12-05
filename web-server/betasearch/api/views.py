@@ -213,7 +213,7 @@ def get_chart_data(request):
     chart_response["time_with_sentiment"] = response.json()["facet_counts"]["facet_pivot"]
 
     # sentiment for each vaccines
-    vaccines = ["covishield", "covaxin", "pfizer", "moderna", "johnson and johnson", "spu"]
+    vaccines = ["covishield", "covaxin", "pfizer", "moderna", "johnson and johnson", "sputnik"]
     sentiment_buckets = []
     country_buckets = []
     for v in vaccines:
@@ -236,11 +236,11 @@ def get_chart_data(request):
         result_country["country"] = response_country.json()["facet_counts"]["facet_fields"]["country"]
         country_buckets.append(result_country)
 
-        chart_response["vaccine_sentiment"]=sentiment_buckets
-        chart_response["vaccine_countries"]=country_buckets
-        json_response=chart_response
+    chart_response["vaccine_sentiment"]=sentiment_buckets
+    chart_response["vaccine_countries"]=country_buckets
     
-    return JsonResponse(json_response,safe=False)
+    
+    return JsonResponse(chart_response,safe=False)
 
 @api_view(['GET', 'POST'])
 def get_news_article(request):
