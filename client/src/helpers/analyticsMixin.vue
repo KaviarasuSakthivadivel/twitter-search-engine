@@ -4,9 +4,12 @@ import {
     sentimentVsColor,
     countryVsColor,
     langVsLabel,
+    usaCovidCurve,
+    indiaCovidCurve,
+    mexicoCovidCurve,
+    vaccineHesistancyKeywords,
 } from '@/helpers/constants'
 import moment from 'moment'
-
 export default {
     methods: {
         formatChartData(data) {
@@ -237,6 +240,81 @@ export default {
                 this.vaccineHesistancyChart.series[0].data =
                     vaccineHesistancyData
             }
+            let usaCases = []
+            let indiaCases = []
+            let mexicoCases = []
+            let usaPoiTweetsFinal = []
+            let indiaPoiTweetsFinal = []
+            let mexicoPoiTweetsFinal = []
+
+            Object.keys(usaCovidCurve).forEach((record) => {
+                usaCases.push([
+                    moment(record).valueOf(),
+                    parseInt(usaCovidCurve[record]),
+                ])
+            })
+            let usaPOITweets =
+                data?.US_covid_tweets?.facet_counts?.facet_ranges?.tweet_date
+                    .counts
+            let indiaPOITweets =
+                data?.India_covid_tweets?.facet_counts?.facet_ranges?.tweet_date
+                    .counts
+            let mexPOITweets =
+                data?.Mexico_covid_tweets?.facet_counts?.facet_ranges
+                    ?.tweet_date.counts
+            for (let i = 0; i < usaPOITweets.length; i += 2) {
+                if (moment(usaPOITweets[i]).valueOf() < 1632369600000) {
+                    usaPoiTweetsFinal.push([
+                        moment(usaPOITweets[i]).valueOf(),
+                        usaPOITweets[i + 1],
+                    ])
+                }
+            }
+            for (let i = 0; i < indiaPOITweets.length; i += 2) {
+                if (moment(indiaPOITweets[i]).valueOf() < 1632369600000) {
+                    indiaPoiTweetsFinal.push([
+                        moment(indiaPOITweets[i]).valueOf(),
+                        indiaPOITweets[i + 1],
+                    ])
+                }
+            }
+            for (let i = 0; i < mexPOITweets.length; i += 2) {
+                if (moment(mexPOITweets[i]).valueOf() < 1632369600000) {
+                    mexicoPoiTweetsFinal.push([
+                        moment(mexPOITweets[i]).valueOf(),
+                        mexPOITweets[i + 1],
+                    ])
+                }
+            }
+            Object.keys(indiaCovidCurve).forEach((record) => {
+                indiaCases.push([
+                    moment(record).valueOf(),
+                    parseInt(indiaCovidCurve[record]),
+                ])
+            })
+            Object.keys(mexicoCovidCurve).forEach((record) => {
+                mexicoCases.push([
+                    moment(record).valueOf(),
+                    parseInt(mexicoCovidCurve[record]),
+                ])
+            })
+            this.covidVsPoiUSACurve.series[0].data = usaCases
+            this.covidVsPoiUSACurve.series[1].data = usaPoiTweetsFinal
+
+            this.covidVsPoiIndiaCurve.series[0].data = indiaCases
+            this.covidVsPoiIndiaCurve.series[1].data = indiaPoiTweetsFinal
+
+            this.covidVsPoiMexicoCurve.series[0].data = mexicoCases
+            this.covidVsPoiMexicoCurve.series[1].data = mexicoPoiTweetsFinal
+
+            let hesKeywords = []
+            Object.keys(vaccineHesistancyKeywords).forEach((key) => {
+                hesKeywords.push({
+                    name: key,
+                    weight: vaccineHesistancyKeywords[key],
+                })
+            })
+            this.vaccineHesistancyWordCloudData.series[0].data = hesKeywords
         },
     },
 }

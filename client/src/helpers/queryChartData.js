@@ -178,12 +178,6 @@ export const timeSeriesData = {
     title: {
         text: 'Tweets count vs Tweet date',
     },
-    subtitle: {
-        text:
-            document.ontouchstart === undefined
-                ? 'Click and drag in the plot area to zoom in'
-                : 'Pinch the chart to zoom in',
-    },
     xAxis: {
         type: 'datetime',
     },
@@ -242,13 +236,7 @@ export const sentimentTimeSeriesData = {
         type: 'spline',
     },
     title: {
-        text: 'Sentiment time series',
-    },
-    subtitle: {
-        text:
-            document.ontouchstart === undefined
-                ? 'Click and drag in the plot area to zoom in'
-                : 'Pinch the chart to zoom in',
+        text: 'Tweet Sentiment time series',
     },
     xAxis: {
         type: 'datetime',
@@ -521,7 +509,7 @@ export const covidVsPoiUSACurve = {
     },
     xAxis: [
         {
-            type: 'catergory',
+            type: 'datetime',
         },
     ],
     yAxis: [
@@ -534,7 +522,7 @@ export const covidVsPoiUSACurve = {
                 },
             },
             title: {
-                text: 'COVID Cases',
+                text: 'Tweets Count',
                 style: {
                     color: Highcharts.getOptions().colors[1],
                 },
@@ -545,7 +533,7 @@ export const covidVsPoiUSACurve = {
             // Secondary yAxis
             gridLineWidth: 0,
             title: {
-                text: 'Tweets Count',
+                text: 'COVID Cases',
                 style: {
                     color: Highcharts.getOptions().colors[0],
                 },
@@ -577,22 +565,197 @@ export const covidVsPoiUSACurve = {
             name: 'COVID Curve',
             type: 'spline',
             yAxis: 1,
-            data: [
-                1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2,
-                1013.1, 1016.9, 1018.2, 1016.7,
-            ],
+            data: [],
             marker: {
                 enabled: false,
             },
-            dashStyle: 'shortdot',
+            dashStyle: 'spline',
+            color: 'rgb(244, 91, 91)',
         },
         {
             name: 'POI COVID Tweets',
             type: 'spline',
-            data: [
-                7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9,
-                9.6,
-            ],
+            data: [],
         },
     ],
+}
+export const covidVsPoiIndiaCurve = {
+    chart: {
+        zoomType: 'xy',
+    },
+    title: {
+        text: 'India COVID Curve vs POI COVID related tweets',
+    },
+    xAxis: [
+        {
+            type: 'datetime',
+        },
+    ],
+    yAxis: [
+        {
+            // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1],
+                },
+            },
+            title: {
+                text: 'Tweets Count',
+                style: {
+                    color: Highcharts.getOptions().colors[1],
+                },
+            },
+            opposite: true,
+        },
+        {
+            // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: 'COVID Cases',
+                style: {
+                    color: Highcharts.getOptions().colors[0],
+                },
+            },
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[0],
+                },
+            },
+        },
+    ],
+    tooltip: {
+        shared: true,
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        x: 80,
+        verticalAlign: 'top',
+        y: 55,
+        floating: true,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || // theme
+            'rgba(255,255,255,0.25)',
+    },
+    series: [
+        {
+            name: 'COVID Curve',
+            type: 'spline',
+            yAxis: 1,
+            data: [],
+            marker: {
+                enabled: false,
+            },
+            dashStyle: 'spline',
+            color: 'rgb(244, 91, 91)',
+        },
+        {
+            name: 'POI COVID Tweets',
+            type: 'spline',
+            data: [],
+        },
+    ],
+}
+export const covidVsPoiMexicoCurve = {
+    chart: {
+        zoomType: 'xy',
+    },
+    title: {
+        text: 'Mexico COVID Curve vs POI COVID related tweets',
+    },
+    xAxis: [
+        {
+            type: 'datetime',
+        },
+    ],
+    yAxis: [
+        {
+            // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1],
+                },
+            },
+            title: {
+                text: 'Tweets Count',
+                style: {
+                    color: Highcharts.getOptions().colors[1],
+                },
+            },
+            opposite: true,
+        },
+        {
+            // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: 'COVID Cases',
+                style: {
+                    color: Highcharts.getOptions().colors[0],
+                },
+            },
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[0],
+                },
+            },
+        },
+    ],
+    tooltip: {
+        shared: true,
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        x: 80,
+        verticalAlign: 'top',
+        y: 55,
+        floating: true,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || // theme
+            'rgba(255,255,255,0.25)',
+    },
+    series: [
+        {
+            name: 'COVID Curve',
+            type: 'spline',
+            yAxis: 1,
+            data: [],
+            marker: {
+                enabled: false,
+            },
+            dashStyle: 'spline',
+            color: 'rgb(244, 91, 91)',
+        },
+        {
+            name: 'POI COVID Tweets',
+            type: 'spline',
+            data: [],
+        },
+    ],
+}
+
+export const vaccineHesistancyWordCloudData = {
+    accessibility: {
+        screenReaderSection: {
+            beforeChartFormat:
+                '<h5>{chartTitle}</h5>' +
+                '<div>{chartSubtitle}</div>' +
+                '<div>{chartLongdesc}</div>' +
+                '<div>{viewTableButton}</div>',
+        },
+    },
+    series: [
+        {
+            type: 'wordcloud',
+            data: [],
+            name: 'Occurrences',
+        },
+    ],
+    title: {
+        text: 'Wordcloud for Persuasion against COVID',
+    },
 }

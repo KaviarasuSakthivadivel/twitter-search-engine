@@ -137,7 +137,7 @@
                 justify-around
             "
         >
-            <div class="title-text-1">34,213</div>
+            <div class="title-text-1">82,177</div>
             <div class="title-text-2">Replies to POI's</div>
         </div>
         <TopInfluencers
@@ -149,12 +149,6 @@
         <TwCharts
             :chartName="'stimeSeries'"
             :chartData="sentimentTimeSeriesData"
-            class="tw-container height500px col-span-6"
-        ></TwCharts>
-        <TwCharts
-            :chartName="'worldMapSeries'"
-            :chartData="worldMapChart"
-            :type="'map'"
             class="tw-container height500px col-span-6"
         ></TwCharts>
         <TwCharts
@@ -176,6 +170,11 @@
         <TwCharts
             :chartName="'wordCloud'"
             :chartData="wordCloudData"
+            class="tw-container height500px col-span-6"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'hesWordCloud'"
+            :chartData="vaccineHesistancyWordCloudData"
             class="tw-container height500px col-span-6"
         ></TwCharts>
         <TwCharts
@@ -202,11 +201,27 @@
         <TwCharts
             :chartName="'poiChart'"
             :chartData="poiChartData"
-            class="tw-container height500px col-span-6"
+            class="tw-container height500px col-span-3"
         ></TwCharts>
         <TwCharts
             :chartName="'covidCurveUSA'"
             :chartData="covidVsPoiUSACurve"
+            class="tw-container height500px col-span-6"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'covidCurveIndia'"
+            :chartData="covidVsPoiIndiaCurve"
+            class="tw-container height500px col-span-6"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'covidCurveMexico'"
+            :chartData="covidVsPoiMexicoCurve"
+            class="tw-container height500px col-span-6"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'worldMapSeries'"
+            :chartData="worldMapChart"
+            :type="'map'"
             class="tw-container height500px col-span-6"
         ></TwCharts>
     </div>
@@ -225,6 +240,9 @@ import {
     vaccineHesistancyChart,
     worldMapChart,
     covidVsPoiUSACurve,
+    covidVsPoiIndiaCurve,
+    covidVsPoiMexicoCurve,
+    vaccineHesistancyWordCloudData,
 } from '@/helpers/queryChartData'
 import analyticsMixin from '../helpers/analyticsMixin.vue'
 import cloneDeep from 'lodash/cloneDeep'
@@ -252,6 +270,11 @@ export default {
         vaccineHesistancyChart: cloneDeep(vaccineHesistancyChart),
         worldMapChart: cloneDeep(worldMapChart),
         covidVsPoiUSACurve: cloneDeep(covidVsPoiUSACurve),
+        covidVsPoiIndiaCurve: cloneDeep(covidVsPoiIndiaCurve),
+        covidVsPoiMexicoCurve: cloneDeep(covidVsPoiMexicoCurve),
+        vaccineHesistancyWordCloudData: cloneDeep(
+            vaccineHesistancyWordCloudData
+        ),
     }),
     created() {
         Promise.all([
