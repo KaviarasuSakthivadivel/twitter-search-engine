@@ -145,12 +145,13 @@ def update_doc_with_metrics(ids,docs):
     else:
         return []
 def get_top_influencers(aws_url,core):
-    poi_list=["redaccionmedica","ewarren","m_ebrard","HillaryClinton","alfredodelmazo","Claudiashein","HillsboroughFL","ShashiTharoor","drharshvardhan","myogiadityanath","ECDOH","PiyushGoyal","FelipeCalderon","BJP4India","mansukhmandviya","smritiirani","Mzavalagc","GovKathyHochul","MIB_India"] 
+    poi_dict={"DrEricDing":21361,"PMOIndia":1046,"narendramodi":1096,"CDCDirector":855,"mansukhmandviya":1067,"KamalaHarris":1531,"CDCgov":16127,"SSalud_mx":349,"JoeBiden":23407,"POTUS":8888,"MoHFW_INDIA":636,"EricTopol":572,"HLGatell":1103,"COVIDNewsByMIB":388} 
+    
     poi_influencers={}
     
-    for p in poi_list:
-        processed_docs=[]
-        q="poi_name:"+p
+    for k,v in poi_dict.items():
+        #processed_docs=[]
+        q="poi_name:"+k
         q= urllib.parse.quote(q, encoding="UTF-8")
 
         query='http://' + aws_url + ':8983/solr/' + core + '/query?q='+q+'&start=0&rows=3200'
@@ -159,25 +160,28 @@ def get_top_influencers(aws_url,core):
         print(json_response['response']["numFound"])
         docs = json_response['response']['docs']
         count=0
-        poi_influencers[p]=str(len(docs))+","
+        
         for doc in docs:
-            q = "replied_to_tweet_id:"+doc['id']
+            q = "replied_to_tweet_id:"+doc['id']+" AND sentiment:positive"
             q = urllib.parse.quote(q, encoding="UTF-8")
 
             reply_query = 'http://' + aws_url + ':8983/solr/' + core + '/query?q=' + \
-            q+'&fq=replies_count:[0 TO 100]'+'&start=0&rows=2000'
+            q+'&start=0&rows=22000'
             response = requests.get(reply_query)
             json_response = response.json()
             reply_docs=json_response['response']['docs']
-            clear_deleted_fields(doc)
-            if len(reply_docs) > 0:
-                doc['i_replies'] = len(reply_docs)
-                processed_docs.append(doc)
+            #clear_deleted_fields(doc)
+            # if len(reply_docs) > 0:
+            #     doc['i_replies'] = len(reply_docs)
+                #processed_docs.append(doc)
             count+=len(reply_docs)
-        poi_influencers[p]=poi_influencers[p]+str(count)
+        if count>0:
+            poi_influencers[k]=str(v)+","+str(count)+","+str(round((count/v)*100))
+        else:
+            poi_influencers[k]=str(v)+","+str(count)+","+"0"
         
-        if len(processed_docs) > 0:
-                index_data(processed_docs)
+        # if len(processed_docs) > 0:
+        #         index_data(processed_docs)
         print(poi_influencers)
     print(poi_influencers)
 
