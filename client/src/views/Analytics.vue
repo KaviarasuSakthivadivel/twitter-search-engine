@@ -140,9 +140,21 @@
             <div class="title-text-1">34,213</div>
             <div class="title-text-2">Replies to POI's</div>
         </div>
+        <TopInfluencers
+            class="tw-container height500px col-span-3"
+        ></TopInfluencers>
+        <POIPersuation
+            class="tw-container height500px col-span-3"
+        ></POIPersuation>
         <TwCharts
-            :chartName="'poiChart'"
-            :chartData="poiChartData"
+            :chartName="'stimeSeries'"
+            :chartData="sentimentTimeSeriesData"
+            class="tw-container height500px col-span-6"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'worldMapSeries'"
+            :chartData="worldMapChart"
+            :type="'map'"
             class="tw-container height500px col-span-6"
         ></TwCharts>
         <TwCharts
@@ -184,8 +196,14 @@
         ></TwCharts>
 
         <TwCharts
-            :chartName="'stimeSeries'"
-            :chartData="sentimentTimeSeriesData"
+            :chartName="'vaccineHesistancy'"
+            :chartData="vaccineHesistancyChart"
+            class="tw-container height500px col-span-3"
+        ></TwCharts>
+
+        <TwCharts
+            :chartName="'poiChart'"
+            :chartData="poiChartData"
             class="tw-container height500px col-span-6"
         ></TwCharts>
     </div>
@@ -201,11 +219,19 @@ import {
     sentimentTimeSeriesData,
     vaccineMentionsByCountryData,
     vaccineCompaniesBySentimentData,
+    vaccineHesistancyChart,
+    worldMapChart,
 } from '@/helpers/queryChartData'
-import analyticsMixinVue from '../helpers/analyticsMixin.vue'
+import analyticsMixin from '../helpers/analyticsMixin.vue'
 import cloneDeep from 'lodash/cloneDeep'
+import TopInfluencers from './charts/TopInfluencers.vue'
+import POIPersuation from './charts/POIPersuation.vue'
 export default {
-    mixins: [analyticsMixinVue],
+    mixins: [analyticsMixin],
+    components: {
+        TopInfluencers,
+        POIPersuation,
+    },
     data: () => ({
         loading: true,
         langChartData: cloneDeep(langChartData),
@@ -219,6 +245,8 @@ export default {
         vaccineCompaniesBySentimentData: cloneDeep(
             vaccineCompaniesBySentimentData
         ),
+        vaccineHesistancyChart: cloneDeep(vaccineHesistancyChart),
+        worldMapChart: cloneDeep(worldMapChart),
     }),
     created() {
         Promise.all([

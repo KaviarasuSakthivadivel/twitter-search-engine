@@ -406,3 +406,105 @@ export const vaccineCompaniesBySentimentData = {
     },
     series: [],
 }
+
+export const vaccineHesistancyChart = {
+    chart: {
+        type: 'column',
+    },
+    title: {
+        text: 'Vaccine Hesistancy',
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true,
+        },
+    },
+    xAxis: {
+        type: 'category',
+    },
+    yAxis: {
+        title: {
+            text: 'Hesistancy rate',
+        },
+    },
+    legend: {
+        enabled: false,
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:.1f}%',
+            },
+        },
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat:
+            '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>',
+    },
+
+    series: [
+        {
+            name: 'Negative Tweets',
+            colorByPoint: true,
+            data: [],
+        },
+    ],
+}
+
+export const worldMapChart = {
+    chart: {
+        map: 'custom/world',
+    },
+
+    title: {
+        text: 'Tweets count by Location',
+    },
+
+    mapNavigation: {
+        enabled: true,
+        enableDoubleClickZoomTo: true,
+    },
+    colorAxis: {
+        min: 1,
+        max: 1000,
+        type: 'logarithmic',
+    },
+    series: [
+        {
+            data: [
+                {
+                    code3: 'USA',
+                    name: 'United States',
+                    value: 152573,
+                    code: 'US',
+                },
+                {
+                    code3: 'IND',
+                    name: 'India',
+                    value: 45897,
+                    code: 'IN',
+                },
+                {
+                    code3: 'MEX',
+                    name: 'Mexico',
+                    value: 66346,
+                    code: 'MX',
+                },
+            ],
+            joinBy: ['iso-a3', 'code3'],
+            name: 'Tweet count',
+            states: {
+                hover: {
+                    color: '#a4edba',
+                },
+            },
+            tooltip: {
+                valueSuffix: '',
+            },
+        },
+    ],
+}

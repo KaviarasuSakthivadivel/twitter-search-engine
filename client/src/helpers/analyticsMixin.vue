@@ -183,17 +183,35 @@ export default {
                 let neutralArr = []
                 let negativeArr = []
                 let positiveArr = []
+                let vaccineHesistancyData = []
                 vaccineBySentiment.forEach((vS) => {
                     categories.push(vS.val)
+
+                    let positiveCount = 0
+                    let negativeCount = 0
+                    let neutralCount = 0
                     for (let i = 0; i <= 6; i += 2) {
                         if (vS.sentiment_score[i] == 'neutral') {
                             neutralArr.push(vS.sentiment_score[i + 1])
+                            neutralCount = vS.sentiment_score[i + 1]
                         } else if (vS.sentiment_score[i] == 'negative') {
                             negativeArr.push(vS.sentiment_score[i + 1])
+                            negativeCount = vS.sentiment_score[i + 1]
                         } else if (vS.sentiment_score[i] == 'positive') {
                             positiveArr.push(vS.sentiment_score[i + 1])
+                            positiveCount = vS.sentiment_score[i + 1]
                         }
                     }
+
+                    vaccineHesistancyData.push({
+                        name: vS.val,
+                        y:
+                            (negativeCount /
+                                (positiveCount +
+                                    negativeCount +
+                                    neutralCount)) *
+                            100,
+                    })
                 })
 
                 let seriesData = []
@@ -216,6 +234,8 @@ export default {
                 this.vaccineCompaniesBySentimentData.xAxis.categories =
                     categories
                 this.vaccineCompaniesBySentimentData.series = seriesData
+                this.vaccineHesistancyChart.series[0].data =
+                    vaccineHesistancyData
             }
         },
     },
