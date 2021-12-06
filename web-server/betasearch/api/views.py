@@ -180,7 +180,7 @@ def get_replies(request, tweet_id):
         q = urllib.parse.quote(q, encoding="UTF-8")
 
         reply_query = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + \
-                      q
+                      q+'&start=0&rows=1000'
         facet_json = {"facet": {
             "sentiment": {"type": "terms", "field": "sentiment", "limit": 3},
         }}
