@@ -141,7 +141,7 @@ def search(request):
 
         # minimum replies filter
         if replyCount != 0:
-            f_query = f_query + " AND " + "replies_count:" + \
+            f_query = f_query + " AND " + "i_replies:" + \
                 "[" + str(replyCount) + " TO *" + "]"
 
         # hashtags filter
@@ -249,17 +249,21 @@ def get_chart_data(request):
 
     query_india = crowd_sourced_keywords + "poi_name:* AND country:India "
     q_india = urllib.parse.quote(query_india, encoding="UTF-8")
-    query_india = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_india + "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=NOW-10MONTH&facet.range.end=NOW"
+    query_india = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_india + \
+        "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=2021-02-06T15:30:57.400Z&facet.range.end=2021-09-23T15:30:57.400Z"
     response_india = requests.get(query_india)
 
     query_US = crowd_sourced_keywords + "poi_name:* AND country:USA "
     q_US = urllib.parse.quote(query_US, encoding="UTF-8")
-    query_US = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_US + "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=NOW-10MONTH&facet.range.end=NOW"
+    query_US = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_US + \
+        "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=2021-02-06T15:30:57.400Z&facet.range.end=2021-09-23T15:30:57.400Z"
+    print(query_US)
     response_US = requests.get(query_US)
 
     query_mexico = crowd_sourced_keywords + "poi_name:* AND country:Mexico "
     q_mexico = urllib.parse.quote(query_mexico, encoding="UTF-8")
-    query_mexico = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_mexico + "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=NOW-10MONTH&facet.range.end=NOW"
+    query_mexico = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_mexico + \
+        "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=2021-02-06T15:30:57.400Z&facet.range.end=2021-09-23T15:30:57.400Z"
     response_Mexico = requests.get(query_mexico)
 
     # Positive persuation towards vaccines
