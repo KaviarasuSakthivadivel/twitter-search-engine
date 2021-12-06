@@ -96,6 +96,7 @@ export default {
             } else if (sentiment == 'negative') {
                 return 'danger'
             }
+            return 'info'
         },
         openDialog() {
             this.dialogVisibility = true
