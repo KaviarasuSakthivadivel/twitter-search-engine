@@ -244,7 +244,8 @@ def get_chart_data(request):
         )["facet_counts"]["facet_fields"]["country"]
         country_buckets.append(result_country)
 
-    query_positive_persuation = "(Get vaccinated) (Get your vaccine) getvaccinatednow getvaccinated vaccinessavelives " + \
+    # Positive persuation towards vaccines
+    '''query_positive_persuation = "(Get vaccinated) (Get your vaccine) getvaccinatednow getvaccinated vaccinessavelives " + \
             "vaccinemandate largestvaccinedrive campañadevacunación we4vaccine vaccinationdrive getvaxxed (campaña de vacunación) (vaccination drive) " + \
             "(vaccine mandate) (Vaccines work) (Vaccines can save lives) (Get a vaccine) (Find a vaccine) (vaccinated is safe) (vaccinated is easy) " + \
             "(vaccines near you) (getting vaccin) (vaccine remains our strongest)"
@@ -264,14 +265,16 @@ def get_chart_data(request):
                 "text_hi:" + "(" + query_hi + ")" + "poi_name:*"
 
     q_positive_persuation = urllib.parse.quote(query_positive_persuation, encoding="UTF-8")
-    facet_json = {"facet": {"poi_name": {"type": "terms", "field": "poi_name", "limit": 30}}}
+    facet_json = {"facet": {"poi_name": {"type": "terms", "field": "poi_name", "limit": 30},
+                            "image_url": {"type": "terms", "field": "profile_url", "limit": 30}}}
+
     query_positive_persuation = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_positive_persuation
     response_positive_persuation = requests.get(query_positive_persuation, json=facet_json)
 
+    chart_response["vaccine_positive_persuation"] = response_positive_persuation.json()'''
+
     chart_response["vaccine_sentiment"] = sentiment_buckets
     chart_response["vaccine_countries"] = country_buckets
-    chart_response["vaccine_positive_persuation"] = response_positive_persuation.json()
-
     return JsonResponse(chart_response, safe=False)
 
 
