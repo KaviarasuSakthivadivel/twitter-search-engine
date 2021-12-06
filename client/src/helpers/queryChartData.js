@@ -460,8 +460,8 @@ export const worldMapChart = {
         enableDoubleClickZoomTo: true,
     },
     colorAxis: {
-        min: 1,
-        max: 1000,
+        min: 1000,
+        max: 200000,
         type: 'logarithmic',
     },
     series: [
@@ -756,6 +756,6 @@ export const vaccineHesistancyWordCloudData = {
         },
     ],
     title: {
-        text: 'Wordcloud for Persuasion against COVID',
+        text: 'Wordcloud for Persuasion against COVID Vaccines',
     },
 }

@@ -45,7 +45,7 @@
             }}</el-tag>
             <div class="flex items-center tw-grey1">
                 <InlineSvg src="reply" iconClass="icon size-sm mr-5px" />{{
-                    tweet.replies_count || '0'
+                    tweet.i_replies || '0'
                 }}
             </div>
             <div class="flex items-center tw-grey1">
@@ -60,7 +60,7 @@
             </div>
             <div
                 @click="openDialog"
-                v-if="tweet.poi_name"
+                v-if="tweet.i_replies && tweet.i_replies > 0"
                 class="flex items-center tw-blue1 hover:underline replies-class"
             >
                 Open Replies
