@@ -261,7 +261,7 @@ def get_chart_data(request):
                 " OR " + "text_hi:" + "(" + query_positive_persuation + ")" + \
                 " OR " + "text_en:" + "(" + query_en + ")" + " OR " + "text_es:" + \
                 "(" + query_es + ")" + " OR " + \
-                "text_hi:" + "(" + query_hi + ")"
+                "text_hi:" + "(" + query_hi + ")" + "poi_name:*"
 
     q_positive_persuation = urllib.parse.quote(query_positive_persuation, encoding="UTF-8")
     facet_json = {"facet": {"poi_name": {"type": "terms", "field": "poi_name", "limit": 30}}}
