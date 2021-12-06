@@ -143,9 +143,9 @@
         <TopInfluencers
             class="tw-container height500px col-span-3"
         ></TopInfluencers>
-        <POIPersuation
+        <POIPersuasion
             class="tw-container height500px col-span-3"
-        ></POIPersuation>
+        ></POIPersuasion>
         <TwCharts
             :chartName="'stimeSeries'"
             :chartData="sentimentTimeSeriesData"
@@ -194,16 +194,19 @@
             :chartData="vaccineCompaniesBySentimentData"
             class="tw-container height500px col-span-3"
         ></TwCharts>
-
         <TwCharts
             :chartName="'vaccineHesistancy'"
             :chartData="vaccineHesistancyChart"
             class="tw-container height500px col-span-3"
         ></TwCharts>
-
         <TwCharts
             :chartName="'poiChart'"
             :chartData="poiChartData"
+            class="tw-container height500px col-span-6"
+        ></TwCharts>
+        <TwCharts
+            :chartName="'covidCurveUSA'"
+            :chartData="covidVsPoiUSACurve"
             class="tw-container height500px col-span-6"
         ></TwCharts>
     </div>
@@ -221,16 +224,17 @@ import {
     vaccineCompaniesBySentimentData,
     vaccineHesistancyChart,
     worldMapChart,
+    covidVsPoiUSACurve,
 } from '@/helpers/queryChartData'
 import analyticsMixin from '../helpers/analyticsMixin.vue'
 import cloneDeep from 'lodash/cloneDeep'
 import TopInfluencers from './charts/TopInfluencers.vue'
-import POIPersuation from './charts/POIPersuation.vue'
+import POIPersuasion from './charts/POIPersuasion.vue'
 export default {
     mixins: [analyticsMixin],
     components: {
         TopInfluencers,
-        POIPersuation,
+        POIPersuasion,
     },
     data: () => ({
         loading: true,
@@ -247,6 +251,7 @@ export default {
         ),
         vaccineHesistancyChart: cloneDeep(vaccineHesistancyChart),
         worldMapChart: cloneDeep(worldMapChart),
+        covidVsPoiUSACurve: cloneDeep(covidVsPoiUSACurve),
     }),
     created() {
         Promise.all([

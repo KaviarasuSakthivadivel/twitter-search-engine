@@ -1,4 +1,6 @@
 import Highcharts from 'highcharts'
+import worldMap from '@highcharts/map-collection/custom/world.geo.json'
+
 export const poiChartData = {
     chart: {
         plotBackgroundColor: null,
@@ -457,7 +459,8 @@ export const vaccineHesistancyChart = {
 
 export const worldMapChart = {
     chart: {
-        map: 'custom/world',
+        type: 'map',
+        map: worldMap,
     },
 
     title: {
@@ -505,6 +508,91 @@ export const worldMapChart = {
             tooltip: {
                 valueSuffix: '',
             },
+        },
+    ],
+}
+
+export const covidVsPoiUSACurve = {
+    chart: {
+        zoomType: 'xy',
+    },
+    title: {
+        text: 'USA COVID Curve vs POI COVID related tweets',
+    },
+    xAxis: [
+        {
+            type: 'catergory',
+        },
+    ],
+    yAxis: [
+        {
+            // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1],
+                },
+            },
+            title: {
+                text: 'COVID Cases',
+                style: {
+                    color: Highcharts.getOptions().colors[1],
+                },
+            },
+            opposite: true,
+        },
+        {
+            // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: 'Tweets Count',
+                style: {
+                    color: Highcharts.getOptions().colors[0],
+                },
+            },
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[0],
+                },
+            },
+        },
+    ],
+    tooltip: {
+        shared: true,
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        x: 80,
+        verticalAlign: 'top',
+        y: 55,
+        floating: true,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || // theme
+            'rgba(255,255,255,0.25)',
+    },
+    series: [
+        {
+            name: 'COVID Curve',
+            type: 'spline',
+            yAxis: 1,
+            data: [
+                1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2,
+                1013.1, 1016.9, 1018.2, 1016.7,
+            ],
+            marker: {
+                enabled: false,
+            },
+            dashStyle: 'shortdot',
+        },
+        {
+            name: 'POI COVID Tweets',
+            type: 'spline',
+            data: [
+                7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9,
+                9.6,
+            ],
         },
     ],
 }

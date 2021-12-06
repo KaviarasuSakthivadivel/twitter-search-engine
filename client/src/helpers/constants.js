@@ -205,3 +205,126 @@ export const topInfluencers = [
         percentage: 6,
     },
 ]
+
+export const poiPersuasion = [
+    {
+        profile_name: 'Andrés Manuel',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1433234061691084800/8TUii2rl_normal.jpg',
+        count: 3149,
+    },
+    {
+        profile_name: 'SALUD México',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1455609336445739012/WwbXl4A4_normal.jpg',
+        count: 3055,
+    },
+    {
+        profile_name: 'Enrique Peña Nieto',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/991180595710513152/V5O-Z320_normal.jpg',
+        count: 2960,
+    },
+    {
+        profile_name: 'PMO India',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1134090740592627712/0Fp-U5-p_normal.png',
+        count: 2907,
+    },
+    {
+        profile_name: 'Rahul Gandhi',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1394646637004431361/43eyqnqr_normal.jpg',
+        count: 2860,
+    },
+    {
+        profile_name: 'Narendra Modi',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1451244086120226817/grlcj6vF_normal.jpg',
+        count: 2832,
+    },
+    {
+        profile_name: 'Vice President Kamala Harris',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1380657780865044480/BBxmnji2_normal.jpg',
+        count: 2738,
+    },
+    {
+        profile_name: 'President of India',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/921303478684790784/FLIFCZxh_normal.jpg',
+        count: 2722,
+    },
+    {
+        profile_name: 'v',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/880104586211581952/KPwn1JyQ_normal.jpg',
+        count: 2713,
+    },
+    {
+        profile_name: '#IndiaFightsCorona',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1314814978562482177/xWkvVISP_normal.jpg',
+        count: 2522,
+    },
+    {
+        profile_name: 'Eric Feigl-Ding',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1296690786688479234/wflBN5Ks_normal.jpg',
+        count: 2458,
+    },
+    {
+        profile_name: 'Rochelle Walensky, MD, MPH',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1359585861642387459/yhSp0gOc_normal.jpg',
+        count: 2456,
+    },
+    {
+        profile_name: 'MyGovHindi',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1432278359979954176/JvJxoOwd_normal.jpg',
+        count: 2414,
+    },
+    {
+        profile_name: 'Nancy Pelosi',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1114294290375688193/P9mcJNGb_normal.png',
+        count: 2365,
+    },
+    {
+        profile_name: 'COFEPRIS',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1458206887648931844/gTIbzZUy_normal.jpg',
+        count: 2172,
+    },
+    {
+        profile_name: 'Hugo López-Gatell Ramírez',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1354492707633205248/9Zja1bTx_normal.jpg',
+        count: 2034,
+    },
+    {
+        profile_name: 'Dr. Tom Frieden',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1418633266094018562/xK9kYIRN_normal.jpg',
+        count: 1997,
+    },
+    {
+        profile_name: 'Arvind Kejriwal',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/945853608389574656/REH_LpUJ_normal.jpg',
+        count: 1891,
+    },
+    {
+        profile_name: 'NIH',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1375464964769595399/4g7rQNme_normal.jpg',
+        count: 1868,
+    },
+    {
+        profile_name: 'Eric Topol',
+        profile_url:
+            'https://pbs.twimg.com/profile_images/1115688713424519169/kHgDk5TV_normal.png',
+        count: 1800,
+    },
+]
