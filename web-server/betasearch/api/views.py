@@ -78,6 +78,7 @@ def search(request):
         row = pageSize
 
         # translate the given query in all three languages(en,hi,es) to support search results in all three languages
+        detection = translator.detect(query)
         translator_en = translator.translate(query, dest='en')
         query_en = translator_en.text
         translator_es = translator.translate(query, dest='es')
@@ -86,7 +87,7 @@ def search(request):
         query_hi = translator_hi.text
 
         # query generation for text_en ,text_hi,text_es fields
-        query = "text_en:" + "(" + query + ")^10" + " OR " + "text_es:" + "(" + query + ")^10" + " OR " + "text_hi:" + "(" + query + ")^10" + \
+        query = "text_en:" + "(" + query + ")" + f"{'^10' if detection.lang == 'en' else ''}" + " OR " + "text_es:" + "(" + query + ")" + f"{'^10' if detection.lang == 'es' else ''}" + " OR " + "text_hi:" + "(" + query + ")" + f"{'^10' if detection.lang == 'hi' else ''}" + \
                 "text_en:" + "(" + query_en + ")" + " OR " + "text_es:" + \
                 "(" + query_es + ")" + " OR " + \
                 "text_hi:" + "(" + query_hi + ")"
@@ -257,7 +258,6 @@ def get_chart_data(request):
     q_US = urllib.parse.quote(query_US, encoding="UTF-8")
     query_US = 'http://' + settings.AWS_URL + ':8983/solr/' + settings.CORE + '/query?q=' + q_US + \
         "&facet=true&facet.limit=1000&facet.range=tweet_date&facet.range.gap=%2B1DAY&facet.range.start=2021-02-06T15:30:57.400Z&facet.range.end=2021-09-23T15:30:57.400Z"
-    print(query_US)
     response_US = requests.get(query_US)
 
     query_mexico = crowd_sourced_keywords + "poi_name:* AND country:Mexico "
