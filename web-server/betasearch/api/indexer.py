@@ -7,7 +7,7 @@ import requests
 
 CORE_NAME = "IRF21P1_demo"
 # AWS_IP = "ec2-18-218-166-215.us-east-2.compute.amazonaws.com"
-AWS_IP = "3.20.12.127"
+AWS_IP = "18.190.13.51"
 
 
 # AWS_IP = "localhost"
